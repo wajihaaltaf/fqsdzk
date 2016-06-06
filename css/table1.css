@@ -1,0 +1,52 @@
+body
+{
+font-family:Arial, Helvetica, sans-serif;
+font-size:13px;
+padding:1px 0px 0px 0px; 
+margin:0px 0px 0px 0px;
+}
+.editbox
+{
+display:none
+}
+td
+{
+padding:5px;
+border-left:1px solid black;
+border-bottom:1px solid black;
+}
+table{
+border-right:1px solid black;
+}
+.editbox
+{
+font-size:14px;
+width:53px;
+height:27px;
+background-color:#ffffcc;
+
+border:solid 1px #00FF7F;
+padding:0 4px;
+
+-webkit-border-radius: 3px;
+-moz-border-radius: 3px;
+ border-radius: 3px;
+}
+.edit_tr
+{
+background: none repeat scroll 0 0 #D5EAF0;
+}
+th
+{
+background: none repeat scroll
+font-weight:bold;
+text-align:center;
+padding:8px;
+border:1px solid #fff;
+border-right-width: 0px;
+}
+.head
+{
+background: none repeat scroll 0 0 black;
+color:white;
+}

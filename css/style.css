@@ -1,0 +1,21 @@
+﻿
+/* =============================================================
+   GENERAL STYLES
+ ============================================================ */
+body {
+    font-family: 'Open Sans', sans-serif;
+   
+}
+
+.pad-top {
+    padding-top:40px;
+}
+
+#radioBtn .notActive{
+    color: #3276b1;
+    background-color: #fff;
+}
+
+.table-sortable tbody tr {
+    cursor: move;
+}
