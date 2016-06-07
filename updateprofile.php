@@ -1,5 +1,5 @@
 <?php
-mysql_select_db('pia',mysql_connect('localhost','root',''))or die(mysql_error());
+require_once('config.php');
 ?>
 
 <?php
@@ -22,8 +22,8 @@ require_once('session2.php');
 				<div class="span7" id="">  
                      <div class="row-fluid">
 					  <?php	
-	                   $count_client=mysql_query("select * from candidate where isapprove =1 and isactive =1");
-	                   $count = mysql_num_rows($count_client);
+	                   $count_client=mysqli_query($con,"select * from candidate where isapprove =1 and isactive =1");
+	                   $count = mysqli_num_rows($count_client);
                        ?>	
                         <!-- block -->						
                         <div id="block_bg" class="block">	
@@ -51,12 +51,11 @@ require_once('session2.php');
 										</thead>
 										<tbody>
 													<?php
-													$user_query = mysql_query("select * from candidate where isapprove=1 and isactive=1")or die(mysql_error());
-													while($row = mysql_fetch_array($user_query)){
+													$user_query = mysqli_query($con,"select * from candidate where isapprove=1 and isactive=1")or die(mysqli_error($con));
+													while($row = mysqli_fetch_array($user_query)){
 													$id = $row['cand_id'];
-													$cfname= $row['cand_full_name'];
-													$clname= $row['cand_last_name'];
-													$cname= $cfname.$clname;
+													$cname= $row['cand_full_name'];
+													
 											?>
 									
 												<tr>

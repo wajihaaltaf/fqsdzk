@@ -74,7 +74,7 @@
   }, false);
   </script>
   <?php
-mysql_select_db('pia',mysql_connect('localhost','root',''))or die(mysql_error());
+require_once('config.php');
 if (isset($_GET['email']) && preg_match('/^([a-zA-Z0-9])+([a-zA-Z0-9\._-])*@([a-zA-Z0-9_-])+([a-zA-Z0-9\._-]+)+$/', $_GET['email']))
 {
     $email = $_GET['email'];
@@ -83,8 +83,8 @@ if (isset($_GET['key']) && (strlen($_GET['key']) == 32))//The Activation key wil
 {
     $key = $_GET['key'];
 }
-$user_query = mysql_query("SELECT active_time FROM candidate WHERE cand_email= '$email' ")or die(mysql_error());
-													while($row = mysql_fetch_array($user_query)){
+$user_query = mysqli_query($con,"SELECT active_time FROM candidate WHERE cand_email= '$email' ")or die(mysqli_error($con));
+													while($row = mysqli_fetch_array($user_query)){
 													$time = $row['active_time'];
 													$timestamp = strtotime('$time') + 60*60*60;
 													$time = date('H:i', $timestamp);
@@ -92,7 +92,7 @@ $user_query = mysql_query("SELECT active_time FROM candidate WHERE cand_email= '
 if (isset($_POST['update']))
 { 
 $npassword= $_POST['pwd1'];
-  $result = mysql_query("UPDATE candidate SET Activation=NULL,cand_password = '$npassword' WHERE cand_email ='$email' LIMIT 1") or die(mysql_error());
+  $result = mysqli_query($con,"UPDATE candidate SET Activation=NULL,cand_password = '$npassword' WHERE cand_email ='$email' LIMIT 1") or die(mysqli_error($con));
 
 
     // Print a customized message:

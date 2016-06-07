@@ -1,6 +1,5 @@
- 
 <?php
-mysql_select_db('pia',mysql_connect('localhost','root',''))or die(mysql_error());
+require_once('config.php');
 ?>
 <?php
 require_once('session2.php');
@@ -13,23 +12,23 @@ require_once('session2.php');
 	$vimage= mysql_real_escape_string($_POST['vimage']);
 	$id= mysql_real_escape_string($_POST['ref_id']);
 	$adminid= mysql_real_escape_string($_SESSION['id']);
-	$user_query = mysql_query("select cand_id from candidate where ref_id='$id'")or die(mysql_error());
-													while($row = mysql_fetch_array($user_query)){	
+	$user_query = mysqli_query($con,"select cand_id from candidate where ref_id='$id'")or die(mysqli_error($con));
+													while($row = mysqli_fetch_array($user_query)){	
 													$cand = $row['cand_id'];}
 													
-		mysql_query("INSERT INTO `voucher` (`voucher_id`, `voucher_amount`, `Ref_id`, `voucher_attachment`,`voucher_date`, `voucher_entry_date`, `admin_id`) VALUES ('$vid', '$vamount', '$id','$vimage','$vdate', NOW(), '$adminid') ")or die(mysql_error());
+		mysqli_query($con,"INSERT INTO `voucher` (`voucher_id`, `voucher_amount`, `Ref_id`, `voucher_attachment`,`voucher_date`, `voucher_entry_date`, `admin_id`) VALUES ('$vid', '$vamount', '$id','$vimage','$vdate', NOW(), '$adminid') ")or die(mysqli_error($con));
 		
 			$select = "SELECT HOST FROM information_schema.processlist where id = connection_id()";
-$qry=mysql_query($select);
-		while($rec = mysql_fetch_array($qry)){
+$qry=mysqli_query($con,$select);
+		while($rec = mysqli_fetch_array($qry)){
 		$host = "$rec[HOST]";}
 		$vs=0; $balance=0;
-		$user_query = mysql_query("SELECT sum(voucher_amount) as vs FROM voucher WHERE Ref_id='$id'")or die(mysql_error());
-													while($row = mysql_fetch_array($user_query)){	
+		$user_query = mysqli_query($con,"SELECT sum(voucher_amount) as vs FROM voucher WHERE Ref_id='$id'")or die(mysqli_error($con));
+													while($row = mysqli_fetch_array($user_query)){	
 													$vs = $row['vs'];}
 													
-				$user_query = mysql_query("SELECT max(balance) as balance FROM user_transaction WHERE cand_id='$cand'")or die(mysql_error());
-													while($row = mysql_fetch_array($user_query)){	
+				$user_query = mysqli_query($con,"SELECT max(balance) as balance FROM user_transaction WHERE cand_id='$cand'")or die(mysqli_error($con));
+													while($row = mysqli_fetch_array($user_query)){	
 													$balance = $row['balance'];}		
 if($balance==0) { if($vs==0) { ?>
 <script>
@@ -40,7 +39,11 @@ window.location = "finance.php";
 } else { $bal= $vs; }
 } else {$bal= $balance; }
 
-mysql_query("INSERT INTO `user_transaction` (`transaction_id`, `cand_id`, `transaction_time`, `transaction_ipaddress`, `debit`, `credit`, `balance`) VALUES (NULL, '$cand', NOW(), '$host', '$vamount', '0', '$bal');")or die(mysql_error());	
+$checking=mysqli_query($con,"INSERT INTO `user_transaction` (`transaction_id`, `cand_id`, `transaction_time`, `transaction_ipaddress`, `debit`, `credit`, `balance`) VALUES (NULL, '$cand', NOW(), '$host', '$vamount', '0', '$bal');")or die(mysqli_error($con));	
+if($checking)
+mysqli_commit($con);
+else mysqli_rollback($con);
+mysqli_close($con);
 ?>
 <script>
 alert('Voucher Inserted Successfully');

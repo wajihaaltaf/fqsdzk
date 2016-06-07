@@ -1,6 +1,5 @@
 <?php
-mysql_select_db('pia',mysql_connect('localhost','root',''))or die(mysql_error());
-//$con = mysqli_connect("localhost", "root", "", "pia");
+require_once('config.php');
 ?>
 <?php
 	if (isset($_POST['register'])){
@@ -19,44 +18,50 @@ mysql_select_db('pia',mysql_connect('localhost','root',''))or die(mysql_error())
 	$password = md5(mysql_real_escape_string($_POST['pwd1']));
     $img = mysql_real_escape_string($_POST['image']);
 	$nicimg = mysql_real_escape_string($_POST['nicimage']);
-	mysql_query("INSERT INTO `candidate` (`Ref_id`, `cand_id`, `cand_password`, `cand_full_name`, `cand_father_name`, `cand_nic`, `cand_dob`, `cand_gender`, `cand_contactno`, `cand_email`, `cand_permenant_address`, `cand_current_address`, `cand_nic_attachment`, `cand_profile_pic`,`cand_pob`,`cand_organization`,`isactive`) VALUES ('0', '', '$password', '$firstname', '$fathername', '$NIC', '$bdate', '$gender', '$contact', '$email', '$paddress', '$caddress','$nicimg','$img','$pob','$organization','0')")or die(mysql_error());
-	
-if($organization == "PIA")
- $org= "PIA";
- if($organization == "Army")
- $org= "ARM";
- if($organization == "Pakistan AirForce")
- $org = "PAF";
- if($organization == "Navy")
- $org= "NAV";
- if($organization == "Shaheen Airline")
- $org= "SHA";
- if($organization == "Others")
- $org= "OTH";
+	$checking=mysqli_query($con,"INSERT INTO `candidate` (`Ref_id`, `cand_id`, `cand_password`, `cand_full_name`, `cand_father_name`, `cand_nic`, `cand_dob`, `cand_gender`, `cand_contactno`, `cand_email`, `cand_permenant_address`, `cand_current_address`, `cand_nic_attachment`, `cand_profile_pic`,`cand_pob`,`cand_organization`,`isactive`) VALUES ('0', '', '$password', '$firstname', '$fathername', '$NIC', '$bdate', '$gender', '$contact', '$email', '$paddress', '$caddress','$nicimg','$img','$pob','$organization','0')")or die(mysqli_error($con));
+	if($checking)
+	{
+ $user_query = mysqli_query($con,"SELECT org_stn FROM `Organization` where org_name='$organization' ")or die(mysqli_error($con));
+													$row = mysqli_fetch_array($user_query);
+													$org = $row['org_stn'];
  if($_POST['refid']=='')
 {
 $select = "SELECT max(cand_id) as cand_id FROM candidate";
-$qry=mysql_query($select);
-		while($rec = mysql_fetch_array($qry)) {
+$qry=mysqli_query($con,$select);
+		while($rec = mysqli_fetch_array($qry)) {
 		$cand_id = "$rec[cand_id]";}
 		$cand_idd = "000" .$cand_id;
 		$cand_idd = substr($cand_idd, -4);
 		$year = date("Y");
 		$ref_id= $year. $org. $cand_idd;
-		mysql_query("UPDATE `candidate` SET `Ref_id` = '$ref_id',isapprove=0 WHERE `candidate`.`cand_id` = '$cand_id' ")or die(mysql_error());
-		?>
-        <script>
-alert('Your Account will be activated after admin approval.You will get confirmation email soon');
-window.location = "index.php";
-</script> <?php }
-else  {$qry=mysql_query("UPDATE `candidate` SET `Ref_id` = '$refid',isapprove=0 WHERE `candidate`.`cand_id` = '$cand_id' ")or die(mysql_error());
+		mysqli_query($con,"UPDATE `candidate` SET `Ref_id` = '$ref_id',isapprove=0 WHERE `candidate`.`cand_id` = '$cand_id' ")or die(mysqli_error($con));
+	    mysqli_commit($con);
+		 mysqli_close($con);
 		?>
 <script>
-alert('Your Registeration is not proper');
+alert('Your Account will be activated after admin approval.You will get confirmation email soon');
 window.location = "index.php";
 </script>
-   <?php
+<?php }
+else  {$qry=mysqli_query($con,"UPDATE `candidate` SET `Ref_id` = '$refid',isapprove=0 WHERE `candidate`.`cand_id` = '$cand_id' ")or die(mysqli_error($con));
+mysqli_commit($con);
+ mysqli_close($con);
+		?>
+<script>
+alert('Your Account will be activated after admin approval.You will get confirmation email soon');
+window.location = "index.php";
+</script>
+<?php
    }}
+   else {
+   mysqli_rollback($con);
+   mysqli_close($con);
+   ?>
+<script>
+alert('Your Account will be activated after admin approval.You will get confirmation email soon');
+window.location = "index.php";
+</script>
+<?php }}
 		?>
 <!DOCTYPE html>
 <html lang="en">
@@ -67,7 +72,6 @@ window.location = "index.php";
 <meta name="description" content="">
 <meta name="author" content="">
 <!-- Bootstrap core CSS -->
-    
 <script type="text/javascript">
 
   document.addEventListener("DOMContentLoaded", function() {
@@ -143,7 +147,7 @@ window.location = "index.php";
 
   }, false);
   </script>
-   <script language="javascript">
+<script language="javascript">
     function Checkfiles()
     {
     var fup = document.getElementById('filename');
@@ -161,7 +165,7 @@ window.location = "index.php";
     }
     }
     </script>
-			<script type="text/javascript" src="http://code.jquery.com/jquery-2.1.4.min.js"></script> 
+<script type="text/javascript" src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
 <script src="//cdn.jsdelivr.net/webshim/1.14.5/polyfiller.js"></script>
 <script>
 webshims.setOptions('forms-ext', {types: 'date'});
@@ -205,11 +209,10 @@ en: {
 <script type="text/javascript" src="js/bootstrap.min.js"></script>
 <script type="text/javascript" src="js/scripts.js"></script>
 <title>PIA | Signup</title>
-<link rel="shortcut icon" href="../hr/ABS/assets/img/images.jpg">
+<link rel="shortcut icon" href="assets/img/images.jpg">
 <!-- Bootstrap Core CSS -->
 <link href="css/bootstrap.min.css" rel="stylesheet">
 <!-- Custom CSS -->
-
 <!-- Custom Fonts -->
 <link href="css/font-awesome.min.css" rel="stylesheet" type="text/css">
 <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -240,41 +243,42 @@ en: {
           </h3>
           <br>
           <div>
-          <div class="form-group">
-            <label class="col-md-5 control-label" for="rental">Name:</label>
-            <div class="col-md-3">
-              <input type="text" name="fname" id = "fname" class="form-control input-md" pattern="[A-Za-z. ]{1,30}" required/>
+            <div class="form-group">
+              <label class="col-md-5 control-label" for="rental">Name:</label>
+              <div class="col-md-3">
+                <input type="text" name="fname" id = "fname" class="form-control input-md" pattern="[A-Za-z. ]{1,30}" required/>
+              </div>
             </div>
-          </div>
-          
-          <div class="form-group">
-            <label class="col-md-5 control-label">Father Name:</label>
-            <div class="col-md-3">
-              <input type="text" name="fathername" id = "fathername" class="form-control input-md" pattern="[A-Za-z. ]{1,30}" required/>
+            <div class="form-group">
+              <label class="col-md-5 control-label">Father Name:</label>
+              <div class="col-md-3">
+                <input type="text" name="fathername" id = "fathername" class="form-control input-md" pattern="[A-Za-z. ]{1,30}" required/>
+              </div>
             </div>
-          </div>
-          <div class="form-group">
-            <label class="col-md-5 control-label">Refrence id(if any):</label>
-            <div class="col-md-3">
-              <input type="text" name="refid" id = "refid" class="form-control input-md" pattern="[A-Za-z0-9]{11}" />
+            <div class="form-group">
+              <label class="col-md-5 control-label">Refrence id(if any):</label>
+              <div class="col-md-3">
+                <input type="text" name="refid" id = "refid" class="form-control input-md" pattern="[A-Za-z0-9]{11}" />
+              </div>
             </div>
-          </div>
-          <div>
-          <div class="form-group">
-            <label class="col-md-5 control-label">Organization:</label>
-            <div class="col-md-3">
-              <select id="room_id" name="organization" class="form-control" required>
+            <div class="form-group">
+              <label class="col-md-5 control-label" for="room">Organization:</label>
+              <div class="col-md-3">
+                <select id="dept_id" name="organization" class="form-control" required/>
+                
                 <option></option>
-                <option>Army</option>
-                <option>Navy</option>
-                <option>Pakistan AirForce</option>
-                <option>PIA</option>
-                <option>Shaheen Airline</option>
-                <option>Others</option>
-              </select>
+                <?php 
+						$query=mysqli_query($con,"SELECT * FROM `Organization` ORDER by org_name");
+						while($row=mysqli_fetch_array($query))
+						 { 
+						 $sel= "selected";
+						 	?>
+                <option value="<?php echo $row['org_name'];?>" <?=$sel?> > <?php echo $row['org_name'];?> </option>
+                <?php 
+						} ?>
+                </select>
+              </div>
             </div>
-          </div>
-          <div>
             <div class="form-group">
               <label class="col-md-5 control-label">Gender:</label>
               <div class="col-md-3">
@@ -299,7 +303,7 @@ en: {
             <div class="form-group">
               <label class="col-md-5 control-label" for="rental">Date of birth:</label>
               <div class="col-md-3">
-             <input type="date" name="dob" id = "date" class="form-control input-md" max="2050-12-31" min="1947-12-31" required/>
+                <input type="date" name="dob" id = "date" class="form-control input-md" max="2050-12-31" min="1947-12-31" required/>
               </div>
             </div>
             <div class="form-group">
@@ -323,36 +327,39 @@ en: {
             <div class="form-group">
               <label class="col-md-5 control-label" for="rental">Contact No.:</label>
               <div class="col-md-3">
-                
                 <input type="text" name="contact" id = "contact" class="form-control input-md" title="input number only"  pattern="[0-9]{11}" title="Numbers Only" required/>
               </div>
             </div>
             <div class="form-group">
               <label class="col-md-5 control-label" for="rental">Profile Picture:</label>
               <div class="col-md-3">
-                 
-    <li class="two">
-    <div class="left_nor"><input type="file" id="logo1" onChange="Checkfiles()" multiple accept='image/*' name="image" tabindex="20" value="<?php if($_POST["txtLogoFileName"]) echo $_POST["txtLogoFileName"]; else echo($LogofileName); ?>" /></div> </li>
+                <li class="two">
+                  <div class="left_nor">
+                    <input type="file" id="logo1" onChange="Checkfiles()" multiple accept='image/*' name="image" tabindex="20" value="<?php if($_POST["txtLogoFileName"]) echo $_POST["txtLogoFileName"]; else echo($LogofileName); ?>" />
+                  </div>
+                </li>
               </div>
             </div>
             <div class="form-group">
               <label class="col-md-5 control-label" for="rental">NIC Attachment:</label>
               <div class="col-md-3">
-                   
-    <li class="two">
-    <div class="left_nor"><input type="file" id="logo1" onChange="Checkfiles()" multiple accept='image/*' name="nicimage" tabindex="20" value="<?php if($_POST["txtLogoFileName"]) echo $_POST["txtLogoFileName"]; else echo($LogofileName); ?>" /></div> </li>
+                <li class="two">
+                  <div class="left_nor">
+                    <input type="file" id="logo1" onChange="Checkfiles()" multiple accept='image/*' name="nicimage" tabindex="20" value="<?php if($_POST["txtLogoFileName"]) echo $_POST["txtLogoFileName"]; else echo($LogofileName); ?>" />
+                  </div>
+                </li>
               </div>
             </div>
             <div class="form-group">
               <label class="col-md-5 control-label" for="rental">Password:</label>
               <div class="col-md-3">
-              <input id="field_pwd1" title="Password must contain at least 6 characters, including UPPER/lowercase and numbers." class="form-control input-md" type="password" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" name="pwd1">
+                <input id="field_pwd1" title="Password must contain at least 6 characters, including UPPER/lowercase and numbers." class="form-control input-md" type="password" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" name="pwd1">
               </div>
             </div>
-             <div class="form-group">
+            <div class="form-group">
               <label class="col-md-5 control-label" for="rental">Confirm Password:</label>
               <div class="col-md-3">
-             <input id="field_pwd2" title="Please enter the same Password as above." type="password" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" class="form-control input-md" name="pwd2">
+                <input id="field_pwd2" title="Please enter the same Password as above." type="password" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" class="form-control input-md" name="pwd2">
               </div>
             </div>
             <div class="control-group">

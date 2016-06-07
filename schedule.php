@@ -1,6 +1,6 @@
 <?php
-mysql_select_db('pia',mysql_connect('localhost','root',''))or die(mysql_error());
-$con = mysqli_connect("localhost", "root", "", "pia");
+require_once('config.php');
+
 require_once('session2.php');
 ?>
 <?php
@@ -10,12 +10,12 @@ require_once('session2.php');
 	$station=mysql_real_escape_string($_POST['station']);
 	$edate=mysql_real_escape_string($_POST['edate']);
 	$ddate=mysql_real_escape_string($_POST['ddate']);
-	$user_query = mysqli_query($con,"SELECT module.module_id,category.category_id FROM module,category WHERE module.category_id=category.category_id AND category.category_name='$category' AND module.module_name='$module'")or die(mysql_error());
+	$user_query = mysqli_query($con,"SELECT module.module_id,category.category_id FROM module,category WHERE module.category_id=category.category_id AND category.category_name='$category' AND module.module_name='$module'")or die(mysqli_error($con));
 													while($row = mysqli_fetch_array($user_query))
 													{$mid = $row['module_id'];
 													$cid= $row['category_id'];
 													}				
-	$qry=mysqli_query($con,"INSERT INTO `schedule` (`exam_date`, `module_id`, `category_id`,`station_id`, `exam_id`, `exam_deadline`) VALUES ('$edate','$mid','$cid', '$station', '', '$ddate')")or die(mysql_error());
+	$qry=mysqli_query($con,"INSERT INTO `schedule` (`exam_date`, `module_id`, `category_id`,`station_id`, `exam_id`, `exam_deadline`) VALUES ('$edate','$mid','$cid', '$station', '', '$ddate')")or die(mysqli_error($con));
 		if($qry)
 		{ mysqli_commit($con);
               
@@ -88,8 +88,8 @@ window.location = "schedule.php";
 								<select id="dept_id" name="station" class="form-control" required/>  
 									<option></option>
 								<?php 
-						$query=mysql_query("SELECT * FROM station ORDER by station_name");
-						while($row=mysql_fetch_array($query))
+						$query=mysqli_query($con,"SELECT * FROM station ORDER by station_name");
+						while($row=mysqli_fetch_array($query))
 						 { 
 						 $sel= "selected";
 						 	?>
@@ -130,16 +130,16 @@ var selectType = $("#type");
 
 var optionsList = {
     B1: [
-        <?php $user_query = mysql_query("SELECT module_name from module where category_id=1 ")or die(mysql_error());
-													while($row = mysql_fetch_array($user_query)){
+        <?php $user_query = mysqli_query($con,"SELECT module_name from module where category_id=1 ")or die(mysqli_error($con));
+													while($row = mysqli_fetch_array($user_query)){
 													printf("'%s',", $row[0]);
 													?>
 			
 			<?php } ?>
 			],
     B2: [
-          <?php $user_query = mysql_query("SELECT module_name from module where category_id=2 ")or die(mysql_error());
-													while($row = mysql_fetch_array($user_query)){
+          <?php $user_query = mysqli_query($con,"SELECT module_name from module where category_id=2 ")or die(mysqli_error($con));
+													while($row = mysqli_fetch_array($user_query)){
 													printf("'%s',", $row[0]);
 													?>
 			

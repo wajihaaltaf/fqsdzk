@@ -1,5 +1,5 @@
 <?php
-mysql_select_db('pia',mysql_connect('localhost','root',''))or die(mysql_error());
+require_once('config.php');
 ?>
 
 <?php
@@ -8,8 +8,8 @@ require_once('session2.php');
 
 <?php
 $cand_id=$_GET['id'];
-	$user_query = mysql_query("select * from candidate where cand_id=$cand_id")or die(mysql_error());
-													while($row = mysql_fetch_array($user_query)){
+	$user_query = mysqli_query($con,"select * from candidate where cand_id=$cand_id")or die(mysqli_error($con));
+													while($row = mysqli_fetch_array($user_query)){
 													$candname = $row['cand_full_name'];
 													$candcontactno = $row['cand_contactno'];
 													//$candlname = $row['cand_last_name'];
@@ -42,15 +42,24 @@ $cand_id=$_GET['id'];
 		$email= addslashes("$_POST[cand_email]");
 		$candcontact = addslashes("$_POST[cand_contactno]");
 		if($password = $passw) {
-		mysql_query("UPDATE candidate SET cand_full_name ='$firstname',cand_father_name ='$fathername', cand_dob ='$dob', cand_nic = '$nic',
-		cand_email ='$email',cand_permenant_address='$candpermaddress',cand_current_address='$candcuraddress', modified_by= '$cand_id',modified_at = NOW(),cand_contactno = '$candcontact' WHERE cand_id = '$cand_id'")or die(mysql_error()); 
-		
+		$checking=mysqli_query($con,"UPDATE candidate SET cand_full_name ='$firstname',cand_father_name ='$fathername', cand_dob ='$dob', cand_nic = '$nic',cand_email ='$email',cand_permenant_address='$candpermaddress',cand_current_address='$candcuraddress', modified_by= '$cand_id',modified_at = NOW(),cand_contactno = '$candcontact' WHERE cand_id = '$cand_id'")or die(mysqli_error($con)); 
+		if($checking) { mysqli_commit($con);
+		mysqli_close($con);
 ?>
 <script>
 alert('Updated Successfully');
 window.location = "updateprofile.php";
 </script>
 <?php
+}
+else { mysqli_rollback($con);
+		mysqli_close($con);
+		?><script>
+alert('Error While Updating');
+window.location = "updatepro.php";
+</script>
+<?php
+		}
 }
 else {
 ?>
