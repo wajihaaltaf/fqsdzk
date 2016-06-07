@@ -1,5 +1,5 @@
 <?php
-mysql_select_db('pia',mysql_connect('localhost','root',''))or die(mysql_error());
+require_once('config.php');
 ?>
 <?php
 require_once('session2.php');
@@ -7,7 +7,7 @@ require_once('session2.php');
 <?php
 $cand_id=$_GET['id'];
 $email = $_GET['email'];
-mysql_query("UPDATE candidate SET isactive ='0',disabled_by = '$email',disabled_at= NOW() WHERE cand_id = '$cand_id'")or die(mysql_error()); 	
+mysqli_query($con,"UPDATE candidate SET isactive ='0',disabled_by = '$email',disabled_at= NOW() WHERE cand_id = '$cand_id'")or die(mysqli_error($con)); 	
 ?>
 <script>
 alert('Account Deactivated Successfully');

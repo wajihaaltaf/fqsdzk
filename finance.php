@@ -1,5 +1,5 @@
 <?php
-mysql_select_db('pia',mysql_connect('localhost','root',''))or die(mysql_error());
+require_once('config.php');
 ?>
 <?php
 require_once('session2.php');

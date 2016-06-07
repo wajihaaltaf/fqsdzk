@@ -1,5 +1,5 @@
 <?php
-mysql_select_db('pia',mysql_connect('localhost','root',''))or die(mysql_error());
+require_once('config.php');
 ?>
 <?php
 require_once('session2.php');
@@ -9,15 +9,15 @@ $mname=$_POST['module'];
 $category= $_POST['category'];
 $shift = $_POST['shift'];
 $station=$_POST['station'];
-$user_query = mysql_query("SELECT module.module_id,category.category_id FROM module,category WHERE module.category_id=category.category_id AND category.category_name='$category' AND module.module_name='$mname' ")or die(mysql_error());
-													while($row = mysql_fetch_array($user_query)){
+$user_query = mysqli_query($con,"SELECT module.module_id,category.category_id FROM module,category WHERE module.category_id=category.category_id AND category.category_name='$category' AND module.module_name='$mname' ")or die(mysqli_error($con));
+													while($row = mysqli_fetch_array($user_query)){
 													$module_id = $row['module_id'];
 													$cid = $row['category_id'];
-													$user_query2=mysql_query("SELECT DATE_FORMAT(exam_date, '%d-%m-%Y') as exam_date from schedule  where module_id='$module_id' and station_id= '$station' and category_id='$cid'");
-													$row = mysql_fetch_array($user_query2);
+													$user_query2=mysqli_query($con,"SELECT DATE_FORMAT(exam_date, '%d-%m-%Y') as exam_date from schedule  where module_id='$module_id' and station_id= '$station' and category_id='$cid'");
+													$row = mysqli_fetch_array($user_query2);
 													$dte = $row['exam_date']; 
-														$user_query2=mysql_query("SELECT STN from station where station_id='$station' ");
-													$row = mysql_fetch_array($user_query2);
+														$user_query2=mysqli_query($con,"SELECT STN from station where station_id='$station' ");
+													$row = mysqli_fetch_array($user_query2);
 													$STN = $row['STN']; 
  $mnam=str_replace(' ','',$mname);
   
@@ -30,21 +30,21 @@ $output = fopen('php://output', 'w');
 
 // output the column headings
 
-$yes = mysql_query("SELECT module.module_name , schedule.exam_date  from schedule , module where schedule.module_id=module.module_id and schedule.module_id='$module_id' and schedule.station_id= '$station' ") or die(mysql_error());
+$yes = mysqli_query($con,"SELECT module.module_name , schedule.exam_date  from schedule , module where schedule.module_id=module.module_id and schedule.module_id='$module_id' and schedule.station_id= '$station' ") or die(mysqli_error($con));
 // fetch the datau
-$row = mysql_fetch_assoc($yes);
+$row = mysqli_fetch_assoc($yes);
 
 fputcsv($output, $row);
 fputcsv($output, array('Ref_id', 'First Name', 'Module Name','NIC'));
 // fetch the data
-$rows = mysql_query("SELECT candidate.Ref_id,candidate.cand_full_name,module.module_name,candidate.cand_nic FROM candidate,module,enrollment WHERE module.module_id=enrollment.module_id and enrollment.module_id='$module_id' and candidate.cand_id=enrollment.cand_id") or die(mysql_error());
-$total= mysql_num_rows($rows);
+$rows = mysqli_query($con,"SELECT candidate.Ref_id,candidate.cand_full_name,module.module_name,candidate.cand_nic FROM candidate,module,enrollment WHERE module.module_id=enrollment.module_id and enrollment.module_id='$module_id' and candidate.cand_id=enrollment.cand_id") or die(mysqli_error($con));
+$total= mysqli_num_rows($rows);
 $count= ceil($total/$shift); $var=0;
 for ($x = 1; $x <= $shift; $x++)
 {
-$abc = mysql_query("SELECT candidate.Ref_id,candidate.cand_full_name,module.module_name,candidate.cand_nic FROM candidate,module,enrollment WHERE module.module_id=enrollment.module_id and enrollment.module_id='$module_id' and candidate.cand_id=enrollment.cand_id  limit $var,$count") or die(mysql_error());
+$abc = mysqli_query($con,"SELECT candidate.Ref_id,candidate.cand_full_name,module.module_name,candidate.cand_nic FROM candidate,module,enrollment WHERE module.module_id=enrollment.module_id and enrollment.module_id='$module_id' and candidate.cand_id=enrollment.cand_id  limit $var,$count") or die(mysqli_error($con));
 fputcsv($output, array('shift'.$x));
-while ($row = mysql_fetch_assoc($abc)){
+while ($row = mysqli_fetch_assoc($abc)){
  fputcsv($output, $row);
 }
 $var=$var+$count;
@@ -98,8 +98,8 @@ exit();
 								<select id="dept_id" name="station" class="form-control" required/>  
 									<option></option>
 								<?php 
-						$query=mysql_query("SELECT * FROM station ORDER by station_name");
-						while($row=mysql_fetch_array($query))
+						$query=mysqli_query($con,"SELECT * FROM station ORDER by station_name");
+						while($row=mysqli_fetch_array($query))
 						 { 
 						 $sel= "selected";
 						 	?>
@@ -140,16 +140,16 @@ var selectType = $("#type");
 
 var optionsList = {
     B1: [
-        <?php $user_query = mysql_query("SELECT module_name from module where category_id=1 ")or die(mysql_error());
-													while($row = mysql_fetch_array($user_query)){
+        <?php $user_query = mysqli_query($con,"SELECT module_name from module where category_id=1 ")or die(mysqli_error($con));
+													while($row = mysqli_fetch_array($user_query)){
 													printf("'%s',", $row[0]);
 													?>
 			
 			<?php } ?>
 			],
     B2: [
-          <?php $user_query = mysql_query("SELECT module_name from module where category_id=2 ")or die(mysql_error());
-													while($row = mysql_fetch_array($user_query)){
+          <?php $user_query = mysqli_query($con,"SELECT module_name from module where category_id=2 ")or die(mysqli_error($con));
+													while($row = mysqli_fetch_array($user_query)){
 													printf("'%s',", $row[0]);
 													?>
 			

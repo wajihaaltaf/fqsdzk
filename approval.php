@@ -1,6 +1,6 @@
 <?php
-mysql_select_db('pia',mysql_connect('localhost','root',''))or die(mysql_error());
-$con = mysqli_connect("localhost", "root", "", "pia");
+require_once('config.php');
+
 require_once 'PHPMailer/PHPMailerAutoload.php';
 
 define('GUSER', 'bisma@ayazahmed.com'); // GMail username
@@ -44,11 +44,10 @@ require_once('session2.php');
 <?php
 $cand_id=$_GET['id'];
 $admin_email = $_SESSION['email'];
-	$user_query = mysql_query("select * from candidate where cand_id=$cand_id")or die(mysql_error());
-													while($row = mysql_fetch_array($user_query)){
+	$user_query = mysqli_query($con,"select * from candidate where cand_id=$cand_id")or die(mysqli_error($con));
+													while($row = mysqli_fetch_array($user_query)){
 													$candname = $row['cand_full_name'];
 													$candcontactno = $row['cand_contactno'];
-													//$candlname = $row['cand_last_name'];
 												    $candfname = $row['cand_father_name'];
 													$gender = $row['cand_gender'];
 											        $candnic = $row['cand_nic'];
@@ -63,12 +62,13 @@ $admin_email = $_SESSION['email'];
 													$activation = $row['Activation'];
 													}
 	if (isset($_POST['approve'])){
-		$qry=mysqli_query($con,"UPDATE `candidate` SET isapprove=1,isapproveby='$admin_email' WHERE `candidate`.`cand_id` = '$cand_id' ")or die(mysql_error());
+		$qry=mysqli_query($con,"UPDATE `candidate` SET isapprove=1,isapproveby='$admin_email' WHERE `candidate`.`cand_id` = '$cand_id' ")or die(mysqli_error($con));
 		if($qry)
-		{ $message = "Your Account is approved To activate your account, please click on this link:\n\n";
+		{ mysqli_commit($con);
+		mysqli_close($con);
+		$message = "Your Account is approved To activate your account, please click on this link:\n\n";
                 $message .= WEBSITE_URL . '/PIA/activates.php?email=' . urlencode($candemail) . "&key=$activation";
-				
-mysqli_commit($con);
+
 if (smtpmailer($candemail, 'techrisersnedcis@gmail.com', 'PIA| Signin', 'Registration Confirmation', $message)) {
 	// Finish the page:
                 $msg='<div class="success">Thank you for
@@ -77,7 +77,6 @@ has been sent to '.$candemail.' Please click on the Activation Link to Activate 
 
 	
 }
- mysqli_commit($con);
 ?>
 <script>
 alert('Approved Successfully');
@@ -86,10 +85,11 @@ window.location = "approverequest.php";
 
 <?php }
 else {// If it did not run OK.
+mysqli_rollback($con);
+		mysqli_close($con);
                   $msg='<div class="errormsgbox">You could not be registered due to a system
 error. We apologize for any
 inconvenience.</div>';
-mysqli_rollback($con);
  ?>
 <script>
 alert('Error Occured');
@@ -119,8 +119,8 @@ window.location = "approverequest.php";
  <div class="form-group">
 							  <label class="col-md-5 control-label" for="rental">Ref_id:</label>
                                <?php echo $ref_id; 
-							   $user_query = mysql_query("select Ref_id from candidate where Ref_id = '$ref_id' ")or die(mysql_error());
-													if(mysql_num_rows($user_query)> 1)
+							   $user_query = mysqli_query($con,"select Ref_id from candidate where Ref_id = '$ref_id' ")or die(mysqli_error($con));
+													if(mysqli_num_rows($user_query)> 1)
 													echo "(Ref id already exist)"; ?>
 			</div>
 					

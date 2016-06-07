@@ -1,5 +1,5 @@
 <?php
-mysql_select_db('pia',mysql_connect('localhost','root',''))or die(mysql_error());
+require_once('config.php');
 ?>
 
 <?php
@@ -9,8 +9,8 @@ require_once('session1.php');
 <?php
 $cand_id=$_SESSION['cand_id'];
 $cand_email = $_SESSION['email'];
-$user_query = mysql_query("select cand_password from candidate where cand_id=$cand_id")or die(mysql_error());
-													while($row = mysql_fetch_array($user_query)){
+$user_query = mysqli_query($con,"select cand_password from candidate where cand_id=$cand_id")or die(mysqli_error($con));
+													while($row = mysqli_fetch_array($user_query)){
 													$candpassword = $row['cand_password']; }
 	if (isset($_POST['update'])){
 		if (($_POST['cpassword'] == '')or($_POST['npassword'] == '')or($_POST['rnpassword'] == '' ) )
@@ -25,7 +25,11 @@ $user_query = mysql_query("select cand_password from candidate where cand_id=$ca
 	
    <?php if($candpassword == $cpassword)
    { if($npassword == $rnpassword){
-		mysql_query("UPDATE candidate SET cand_password ='$npassword' WHERE cand_id = '$cand_id' and cand_email = '$cand_email' ")or die(mysql_error()); 	
+		$checking=mysqli_query($con,"UPDATE candidate SET cand_password ='$npassword' WHERE cand_id = '$cand_id' and cand_email = '$cand_email' ")or die(mysqli_error($con)); 	
+		if($checking)
+		mysqli_commit($con);
+		else mysqli_rollback($con);
+		mysqli_close($con);
 ?>
 <script>
 alert('Updated Successfully');

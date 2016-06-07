@@ -19,8 +19,8 @@
 			editable: true,
 			eventLimit: true, // allow "more" link when too many events
 			events: [
-			<?php $user_query = mysql_query("SELECT module.module_name,category.category_name,schedule.exam_date FROM module,category,schedule WHERE module.category_id=category.category_id and schedule.module_id=module.module_id ")or die(mysql_error());
-													while($row = mysql_fetch_array($user_query)){
+			<?php $user_query = mysqli_query($con,"SELECT module.module_name,category.category_name,schedule.exam_date FROM module,category,schedule WHERE module.category_id=category.category_id and schedule.module_id=module.module_id ")or die(mysqli_error($con));
+													while($row = mysqli_fetch_array($user_query)){
 													printf("{title: '%s', start: '%s'},", $row[0]."-".$row[1], $row[2]);
 													?>
 			

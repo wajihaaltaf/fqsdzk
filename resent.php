@@ -1,9 +1,9 @@
 <?php
-mysql_select_db('pia',mysql_connect('localhost','root',''))or die(mysql_error());
+require_once('config.php');
 $msg="";
 $email= $_GET['email'];
 	$activation = md5(uniqid(rand(), true));
- $qry=mysql_query("UPDATE `candidate` SET `Activation` = '$activation' WHERE `candidate`.`cand_email` = '$email' ")or die(mysql_error());
+ $qry=mysqli_query($con,"UPDATE `candidate` SET `Activation` = '$activation' WHERE `candidate`.`cand_email` = '$email' ")or die(mysqli_error($con));
 		if($qry)
 		{
                 DEFINE('WEBSITE_URL', 'http://localhost');

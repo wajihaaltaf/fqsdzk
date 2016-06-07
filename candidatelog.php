@@ -1,19 +1,19 @@
 <?php
-mysql_select_db('pia',mysql_connect('localhost','root',''))or die(mysql_error());
+require_once('config.php');
 ?>
 <?php
 require_once('session2.php');
 if(isset($_POST['approve']))
 { header('Content-Type: text/csv; charset=utf-8');
-header('Content-Disposition: attachment; filename=data.csv');
+header('Content-Disposition: attachment; filename=candidate.csv');
 
 // create a file pointer connected to the output stream
 $output = fopen('php://output', 'w');
 
 // output the column headings
-fputcsv($output, array('Ref_id', 'First Name', 'Email','NIC'));
-$rows = mysql_query("SELECT candidate.Ref_id,candidate.cand_full_name,candidate.cand_email,candidate.cand_nic FROM candidate where isapprove=1 and isactive=1");
-while ($row = mysql_fetch_assoc($rows))
+fputcsv($output, array('Ref_id', 'Name', 'Email','NIC'));
+$rows = mysqli_query($con,"SELECT candidate.Ref_id,candidate.cand_full_name,candidate.cand_email,candidate.cand_nic FROM candidate where isapprove=1 and isactive=1");
+while ($row = mysqli_fetch_assoc($rows))
 {
  fputcsv($output, $row);
 }
@@ -44,12 +44,12 @@ exit();
 
 <!-------------------------------- select table inventory ---------------------------------->
 						<?php 
-						$query=mysql_query("select * FROM candidate where isapprove=1")or die(mysql_error());
-						while($rec=mysql_fetch_array($query)){
+						$query=mysqli_query($con,"select * FROM candidate where isapprove=1")or die(mysqli_error($con));
+						while($rec=mysqli_fetch_array($query)){
 						$id = $rec['cand_id'];
 						?>
 						<tr class="edit_tr">
-						<td><?php echo $rec['cand_full_name'].$rec['cand_last_name']; ?></td>
+						<td><?php echo $rec['cand_full_name']; ?></td>
 						<td><?php echo $rec['cand_email'] ?></td>
                         <td><a href="candinfo.php <?php echo '?id='.$id; ?> ">Candidate detail</a></td>
 						</tr><?php }?>

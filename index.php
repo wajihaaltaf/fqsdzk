@@ -28,7 +28,7 @@
       <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
     <![endif]-->
 </head>
-<body style="background:url(../hr/ABS/assets/img/images.jpg) no-repeat center center fixed;
+<body style="background:url(assets/img/head1.jpg) no-repeat center center fixed;
 		-webkit-background-size: cover !important;
 		-moz-background-size: cover !important;
 		-o-background-size: cover !important;

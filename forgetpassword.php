@@ -1,5 +1,5 @@
 <?php
-mysql_select_db('pia',mysql_connect('localhost','root',''))or die(mysql_error());
+require_once('config.php');
 require_once 'PHPMailer/PHPMailerAutoload.php';
 
 define('GUSER', 'bisma@ayazahmed.com'); // GMail username
@@ -45,7 +45,7 @@ function smtpmailer($to, $from, $from_name, $subject, $body) {
 		if($option == "A") {
 		
 
-			$qry=mysql_query("UPDATE candidate set Activation='$activation',active_time=NOW() where cand_email = '$email'")or die(mysql_error());
+			$qry=mysqli_query($con,"UPDATE candidate set Activation='$activation',active_time=NOW() where cand_email = '$email'")or die(mysqli_error($con));
             
 				$message = " To Reset Password, please click on this link:\n\n";
                 $message .= WEBSITE_URL . '/PIA/reset.php?email=' . urlencode($email) . "&key=$activation";	
@@ -65,7 +65,7 @@ window.location = "index.php";
 		//end of option A	
 else if($option == "B" or $option == "C"){ 
 
-$qry=mysql_query("UPDATE candidate set Activation='$activation',active_time=NOW() where cand_email = '$email'")or die(mysql_error());
+$qry=mysqli_query($con,"UPDATE candidate set Activation='$activation',active_time=NOW() where cand_email = '$email'")or die(mysqli_error($con));
 
 				$message = " To Activate Your Account, please click on this link:\n\n";
                 $message .= WEBSITE_URL . '/PIA/activate.php?email=' . urlencode($email) . "&key=$activation";

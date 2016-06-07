@@ -1,5 +1,5 @@
 <?php
-mysql_select_db('pia',mysql_connect('localhost','root',''))or die(mysql_error());
+require_once('config.php');
 ?>
 
 <?php
@@ -9,13 +9,13 @@ require_once('session1.php');
 <?php
 $moduleid= $_GET['id'];
 $cand_id = $_SESSION['cand_id'];
-$user_query = mysql_query("select * from module where module_id=$moduleid")or die(mysql_error());
-													while($row = mysql_fetch_array($user_query)){
+$user_query = mysqli_query($con,"select * from module where module_id=$moduleid")or die(mysqli_error($con));
+													while($row = mysqli_fetch_array($user_query)){
 													$modulename = $row['module_name'];
 													$coursetitle = $row['course_title'];
 													}
-$user_query = mysql_query("select * from candidate where cand_id=$cand_id")or die(mysql_error());
-													while($row = mysql_fetch_array($user_query)){
+$user_query = mysqli_query($con,"select * from candidate where cand_id=$cand_id")or die(mysqli_error($con));
+													while($row = mysqli_fetch_array($user_query)){
 													$candname = $row['cand_full_name'];
 													$candlname = $row['cand_last_name'];
 													$cname= $candname.$candlname;
@@ -27,14 +27,14 @@ $user_query = mysql_query("select * from candidate where cand_id=$cand_id")or di
 													$candemail = $row['cand_email'];
 													$candorg= $row['cand_organization'];
 													}
-$user_query = mysql_query("select * from voucher where cand_id=$cand_id and voucher_status=1")or die(mysql_error());
-													while($row = mysql_fetch_array($user_query)){	
+$user_query = mysqli_query($con,"select * from voucher where cand_id=$cand_id and voucher_status=1")or die(mysqli_error($con));
+													while($row = mysqli_fetch_array($user_query)){	
 													$voucherid = $row['voucher_id'];
 													$vamount = $row['voucher_amount'];
 											}
 											$vramount=0;
-$user_query = mysql_query("select * from voucher_history where voucher_id=$voucherid")or die(mysql_error());
-													while($row = mysql_fetch_array($user_query)){	
+$user_query = mysqli_query($con,"select * from voucher_history where voucher_id=$voucherid")or die(mysqli_error($con));
+													while($row = mysqli_fetch_array($user_query)){	
 													$vramount= $row['voucher_rem_amount'];
 			
 											}									
@@ -43,8 +43,8 @@ $user_query = mysql_query("select * from voucher_history where voucher_id=$vouch
 			$v = $_POST['v'];
 			$fees= $_POST['fees'];
 			$amount = $v - $fees;
-			mysql_query("INSERT INTO `enrollment` (`enroll_id`, `cand_id`, `module_id`,`enroll_date`) VALUES ('', '$cand_id', '$moduleid',NOW())")or die(mysql_error());
-			mysql_query("INSERT INTO `voucher_history` (`voucher_hist_id`, `voucher_id`, `voucher_rem_amount`, `module_id`, `voucher_date`, `voucher_deducted_amt`) VALUES ('', '$voucherid', '$amount', '$moduleid', NOW(), '$fees')")or die(mysql_error());								
+			mysqli_query($con,"INSERT INTO `enrollment` (`enroll_id`, `cand_id`, `module_id`,`enroll_date`) VALUES ('', '$cand_id', '$moduleid',NOW())")or die(mysqli_error($con));
+			mysqli_query($con,"INSERT INTO `voucher_history` (`voucher_hist_id`, `voucher_id`, `voucher_rem_amount`, `module_id`, `voucher_date`, `voucher_deducted_amt`) VALUES ('', '$voucherid', '$amount', '$moduleid', NOW(), '$fees')")or die(mysqli_error($con));								
 ?>
 <script>
 alert('Enrolled Successfully. \nRemaining voucher amount: <?php echo $amount; ?> ');
@@ -68,13 +68,13 @@ font-weight: bold;
     <meta name="description" content="">
     <meta name="author" content="">
 	<!-- Bootstrap core CSS -->
-    <link href="../hr/ABS/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom styles for this template -->
-    <link href="../hr/ABS/navbar-fixed-top.css" rel="stylesheet">
+    <link href="navbar-fixed-top.css" rel="stylesheet">
 
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
-    <script src="../hr/ABS/js/ie-emulation-modes-warning.js"></script>
+    <script src="js/ie-emulation-modes-warning.js"></script>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -98,22 +98,22 @@ font-weight: bold;
  
 
 	
-	<script type="text/javascript" src="../hr/ABS/js/jquery.min.js"></script>
-	<script type="text/javascript" src="../hr/ABS/js/bootstrap.min.js"></script>
-	<script type="text/javascript" src="../hr/ABS/js/scripts.js"></script>
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="js/scripts.js"></script>
     <title>Home</title>
-<link rel="shortcut icon" href="../hr/ABS/assets/img/logocalc1.png">
+<link rel="shortcut icon" href="assets/img/logocalc1.png">
     <!-- Bootstrap Core CSS -->
-    <link href="../hr/ABS/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom CSS -->
-    <link href="../hr/ABS/css/sb-admin.css" rel="stylesheet">
+    <link href="css/sb-admin.css" rel="stylesheet">
 
     <!-- Morris Charts CSS -->
-    <link href="../hr/ABS/css/plugins/morris.css" rel="stylesheet">
+    <link href="css/plugins/morris.css" rel="stylesheet">
 
     <!-- Custom Fonts -->
-    <link href="../hr/ABS/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -145,7 +145,7 @@ font-weight: bold;
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-               <div class="span3">&nbsp;&nbsp;&nbsp;&nbsp;<img class="index_logo" height="45" width="100" src="../hr/ABS/assets/img/logocalc1.png"></div>
+               <div class="span3">&nbsp;&nbsp;&nbsp;&nbsp;<img class="index_logo" height="45" width="100" src="assets/img/logocalc1.png"></div>
             </div>
             <!-- Top Menu Items -->
             <ul class="nav navbar-right top-nav">
@@ -163,11 +163,11 @@ font-weight: bold;
              <b class="caret"></b></a>
                     <ul class="dropdown-menu">
 					<li>
-                        <a href="../hr/ABS/ceo_edit.php"><i class="fa fa-users fa-lg"></i>&nbsp; Update Info</a>
+                        <a href="ceo_edit.php"><i class="fa fa-users fa-lg"></i>&nbsp; Update Info</a>
                     </li>
 					<li class="divider"></li>
                     <li>
-                        <a href="../hr/ABS/session_logout.php"><i class="fa fa-fw fa-power-off"></i>&nbsp;Log Out</a>
+                        <a href="session_logout.php"><i class="fa fa-fw fa-power-off"></i>&nbsp;Log Out</a>
                     </li>
                     </ul>
                 </li>
@@ -182,10 +182,10 @@ font-weight: bold;
                         </div>
                     </li>
                     <li class="active">
-                        <a href="../hr/ABS/ceopage.php"><i class="fa fa-fw fa-home"></i>Home</a>
+                        <a href="ceopage.php"><i class="fa fa-fw fa-home"></i>Home</a>
                     </li>
                   <li>
-                        <a href="../hr/ABS/aboutusceo.php"><i class="glyphicon glyphicon-info-sign"></i> About Us</a>
+                        <a href="aboutusceo.php"><i class="glyphicon glyphicon-info-sign"></i> About Us</a>
                     </li>
                 </ul>
             </div>
@@ -216,8 +216,8 @@ font-weight: bold;
              <input type="hidden" name="fees" value="<?php echo $fees; ?>" />
              <tr><td>Module Fee:</td> <td><?php echo $fees; ?></td></tr>
                   <?php  $select ="select module_id, cand_id,enroll_date from enrollment";
-$qry=mysql_query($select);
-		while($rec = mysql_fetch_array($qry)){
+$qry=mysqli_query($con,$select);
+		while($rec = mysqli_fetch_array($qry)){
 		$mid = "$rec[module_id]";
 		$cid ="$rec[cand_id]";
 		$edate ="$rec[enroll_date]";
@@ -267,14 +267,14 @@ endif; ?>
     <!-- /#wrapper -->
 
     <!-- jQuery Version 1.11.0 -->
-    <script src="../hr/ABS/js/jquery-1.11.0.js"></script>
+    <script src="js/jquery-1.11.0.js"></script>
 
     <!-- Bootstrap Core JavaScript -->
-    <script src="../hr/ABS/js/bootstrap.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
 
     <!-- Morris Charts JavaScript -->
-    <script src="../hr/ABS/js/plugins/morris/raphael.min.js"></script>
-    <script src="../hr/ABS/js/plugins/morris/morris.min.js"></script>
-    <script src="../hr/ABS/js/plugins/morris/morris-data.js"></script>
+    <script src="js/plugins/morris/raphael.min.js"></script>
+    <script src="js/plugins/morris/morris.min.js"></script>
+    <script src="js/plugins/morris/morris-data.js"></script>
 	</body>
 </html>

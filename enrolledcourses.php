@@ -1,5 +1,5 @@
 <?php
-mysql_select_db('pia',mysql_connect('localhost','root',''))or die(mysql_error());
+require_once('config.php');
 ?>
 
 <?php
@@ -38,13 +38,13 @@ include('headercand.php');
 <!-------------------------------- select table inventory ---------------------------------->
 						<?php $cand_id= $_SESSION['cand_id'];
 						//echo "SELECT enrollment.module_id,enrollment.category_id FROM enrollment WHERE enrollment.cand_id='$cand_id'";
-						$query=mysql_query("SELECT enrollment.module_id,enrollment.category_id FROM enrollment WHERE enrollment.cand_id='$cand_id' ")or die(mysql_error());
-						while($rec=mysql_fetch_array($query)){
+						$query=mysqli_query($con,"SELECT enrollment.module_id,enrollment.category_id FROM enrollment WHERE enrollment.cand_id='$cand_id' ")or die(mysqli_error($con));
+						while($rec=mysqli_fetch_array($query)){
 						$mid = $rec['module_id'];
 						$cid = $rec['category_id'];
 						//echo "SELECT module.module_name,category.category_name FROM category,module WHERE module.module_id='$mid' and category.category_id='$cid' ";
-						$quer=mysql_query("SELECT module.module_name,category.category_name FROM category,module WHERE module.module_id='$mid' and category.category_id='$cid' ")or die(mysql_error());
-						$rc=mysql_fetch_array($quer);
+						$quer=mysqli_query($con,"SELECT module.module_name,category.category_name FROM category,module WHERE module.module_id='$mid' and category.category_id='$cid' ")or die(mysqli_error($con));
+						$rc=mysqli_fetch_array($quer);
 						?>
 						<tr class="edit_tr">
 						<td><center><?php echo $rc['module_name']; ?></center></td>

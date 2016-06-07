@@ -39,7 +39,7 @@ body
 </head>
 <body>
 <?php
-mysql_select_db('pia',mysql_connect('localhost','root',''))or die(mysql_error());
+require_once('config.php');
 if (isset($_GET['email']) && preg_match('/^([a-zA-Z0-9])+([a-zA-Z0-9\._-])*@([a-zA-Z0-9_-])+([a-zA-Z0-9\._-]+)+$/', $_GET['email']))
 {
     $email = $_GET['email'];
@@ -54,7 +54,7 @@ if (isset($email) && isset($key))
 
     // Update the database to set the "activation" field to null
 
-    $result = mysql_query("UPDATE candidate SET Activation=NULL,isactive = '1' WHERE(cand_email ='$email' AND Activation='$key')LIMIT 1") or die(mysql_error());
+    $result = mysqli_query($con,"UPDATE candidate SET Activation=NULL,isactive = '1' WHERE(cand_email ='$email' AND Activation='$key')LIMIT 1") or die(mysqli_error($con));
 
 
     // Print a customized message:

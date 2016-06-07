@@ -1,5 +1,5 @@
 <?php
-mysql_select_db('pia',mysql_connect('localhost','root',''))or die(mysql_error());
+require_once('config.php');
 ?>
 
 <?php
@@ -13,8 +13,8 @@ include('headercand.php');
 				<div class="span7" id="">  
                      <div class="row-fluid">
 					  <?php	
-	                   $count_client=mysql_query("select * from module");
-	                   $count = mysql_num_rows($count_client);
+	                   $count_client=mysqli_query($con,"select * from module");
+	                   $count = mysqli_num_rows($count_client);
                        ?>	
                         <!-- block -->						
                         <div id="block_bg" class="block">	
@@ -42,8 +42,8 @@ include('headercand.php');
 										</thead>
 										<tbody>
 													<?php
-													$user_query = mysql_query("select * from module where course_title='B1' ")or die(mysql_error());
-													while($row = mysql_fetch_array($user_query)){
+													$user_query = mysqli_query($con,"select * from module where course_title='B1' ")or die(mysqli_error($con));
+													while($row = mysqli_fetch_array($user_query)){
 													$id = $row['module_id'];
 													$mname= $row['module_name'];
 											?>
@@ -62,8 +62,8 @@ include('headercand.php');
 							</tr>
 												<?php }?>
                                                 	<?php
-													$user_query = mysql_query("select * from module where course_title='B2' ")or die(mysql_error());
-													while($row = mysql_fetch_array($user_query)){
+													$user_query = mysqli_query($con,"select * from module where course_title='B2' ")or die(mysqli_error($con));
+													while($row = mysqli_fetch_array($user_query)){
 													$id = $row['module_id'];
 													$mname= $row['module_name'];
 											?>

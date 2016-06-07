@@ -1,5 +1,5 @@
 <?php
-mysql_select_db('pia',mysql_connect('localhost','root',''))or die(mysql_error());
+require_once('config.php');
 ?>
 <?php
 $r =1; 
@@ -17,18 +17,17 @@ session_start();
 	
 		//Sanitize the POST values
     $email = clean($_POST['email']);
-    $password = clean(md5("$_POST[password]"));
+    $password = clean(md5($_POST['password']));
 //Create query
 $qry="SELECT * from `candidate` WHERE cand_email = '$email' and cand_password = '$password' and isapprove = 1 and isactive =1";
-	$result=mysql_query($qry);
+	$result=mysqli_query($con,$qry);
 	$qry1="SELECT * from `administration` WHERE admin_email = '$email' and admin_password = '$password'";
-	$row=mysql_query($qry1);
-	echo $qry1;
+	$row=mysqli_query($con,$qry1);
 if($result) { 
-			if(mysql_num_rows($result) > 0 ) {
+			if(mysqli_num_rows($result) > 0 ) {
 			//Login Successful
 			session_regenerate_id();
-			$member = mysql_fetch_assoc($result);
+			$member = mysqli_fetch_assoc($result);
 			$_SESSION['Ref_id'] = $member['Ref_id'];
 			$_SESSION['cand_id'] = $member['cand_id'];
 			$id = $member['cand_id'];
@@ -37,14 +36,16 @@ if($result) {
 			$_SESSION['email'] = $member['cand_email'];
 			$_SESSION['image'] = $member['cand_profile_pic'];
 			$select = "SELECT HOST FROM information_schema.processlist where id = connection_id()";
-$qry=mysql_query($select);
-		while($rec = mysql_fetch_array($qry)){
+$qry=mysqli_query($con,$select);
+		while($rec = mysqli_fetch_array($qry)){
 		$host = "$rec[HOST]";}
-			mysql_query("INSERT INTO `Login` (`login_id`,`cand_id`, `login_time`, `logout_time`, `ip_address`) VALUES ('','$id', NOW(), '', '$host')")or die(mysql_error());
+			mysqli_query($con,"INSERT INTO `Login` (`login_id`,`cand_id`, `login_time`, `logout_time`, `ip_address`) VALUES ('','$id', NOW(), '', '$host')")or die(mysqli_error($con));
 			$qry="SELECT max(login_id) as log_id from `login` WHERE cand_id = '$id' ";
-	$qry=mysql_query($qry);
-while($rec = mysql_fetch_array($qry)){
+	$qry=mysqli_query($con,$qry);
+while($rec = mysqli_fetch_array($qry)){
 		$_SESSION['log_id'] = $rec['log_id'];}
+		mysqli_commit($con);
+		mysqli_close($con);
 			session_write_close();
 			header("location: loc.php?");
 			exit();
@@ -53,13 +54,14 @@ while($rec = mysql_fetch_array($qry)){
 		}
 		if($row)
 			{ 
-			if(mysql_num_rows($row) > 0 ) {
+			if(mysqli_num_rows($row) > 0 ) {
 			session_regenerate_id();
-			while($rec = mysql_fetch_assoc($row)){
+			while($rec = mysqli_fetch_assoc($row)){
 			$_SESSION['id'] = $rec['admin_id'];
 			$_SESSION['email'] = $rec['admin_email'];
 			$_SESSION['password'] = $member['admin_password'];
-		$position = $rec['admin_position']; }
+		$position = $rec['admin_position']; 
+		}
 		if($position == "finance")
 			{header("location: finance.php?");
 			exit(); }
@@ -71,8 +73,8 @@ while($rec = mysql_fetch_array($qry)){
 			else { $s=0; }
 			}
 		if($s==0 && $r==0) {
-		$user_query = mysql_query("select isactive from candidate where cand_email = '$email'")or die(mysql_ereror());
-													while($row = mysql_fetch_array($user_query)){
+		$user_query = mysqli_query($con,"select isactive from candidate where cand_email = '$email'")or die(mysql_ereror());
+													while($row = mysqli_fetch_array($user_query)){
 													$isactive = $row['isactive'];
 													}
 												if($isactive ==0) {header("location: login_errors.php"); exit(); }
