@@ -15,9 +15,13 @@ require_once('config.php');
 	$paddress=mysql_real_escape_string($_POST['paddress']);
 	$caddress=mysql_real_escape_string($_POST['caddress']);
 	$contact=mysql_real_escape_string($_POST['contact']);
-	$password = md5(mysql_real_escape_string($_POST['pwd1']));
+	$password = md5(mysql_real_escape_string($_POST['password']));
     $img = mysql_real_escape_string($_POST['image']);
 	$nicimg = mysql_real_escape_string($_POST['nicimage']);
+	$f = mysqli_query($con,"SELECT cand_id from candidate where cand_email='$email' or cand_nic='$NIC' or cand_contactno='$contact' ")or die(mysqli_error($con));
+													$count = mysqli_num_rows($f);
+													if($count <= 0)
+													{
 	$checking=mysqli_query($con,"INSERT INTO `candidate` (`Ref_id`, `cand_id`, `cand_password`, `cand_full_name`, `cand_father_name`, `cand_nic`, `cand_dob`, `cand_gender`, `cand_contactno`, `cand_email`, `cand_permenant_address`, `cand_current_address`, `cand_nic_attachment`, `cand_profile_pic`,`cand_pob`,`cand_organization`,`isactive`) VALUES ('0', '', '$password', '$firstname', '$fathername', '$NIC', '$bdate', '$gender', '$contact', '$email', '$paddress', '$caddress','$nicimg','$img','$pob','$organization','0')")or die(mysqli_error($con));
 	if($checking)
 	{
@@ -62,6 +66,11 @@ alert('Your Account will be activated after admin approval.You will get confirma
 window.location = "index.php";
 </script>
 <?php }}
+else {
+  echo "information already exist";
+}
+}
+
 		?>
 <!DOCTYPE html>
 <html lang="en">
@@ -72,81 +81,7 @@ window.location = "index.php";
 <meta name="description" content="">
 <meta name="author" content="">
 <!-- Bootstrap core CSS -->
-<script type="text/javascript">
 
-  document.addEventListener("DOMContentLoaded", function() {
-
-    // JavaScript form validation
-
-    var checkPassword = function(str)
-    {
-      var re = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}$/;
-      return re.test(str);
-    };
-
-    var checkForm = function(e)
-    {
-      
-      if(this.pwd1.value != "" && this.pwd1.value == this.pwd2.value) {
-        if(!checkPassword(this.pwd1.value)) {
-          alert("The password you have entered is not valid!");
-          this.pwd1.focus();
-          e.preventDefault();
-          return;
-        }
-      } else {
-        alert("Error: Please check that you've entered and confirmed your password!");
-        this.pwd1.focus();
-        e.preventDefault();
-        return;
-      }
-    };
-
-    var myForm = document.getElementById("myForm");
-    myForm.addEventListener("submit", checkForm, true);
-
-    // HTML5 form validation
-
-    var supports_input_validity = function()
-    {
-      var i = document.createElement("input");
-      return "setCustomValidity" in i;
-    }
-
-    if(supports_input_validity()) {
-      var usernameInput = document.getElementById("field_username");
-      usernameInput.setCustomValidity(usernameInput.title);
-
-      var pwd1Input = document.getElementById("field_pwd1");
-      pwd1Input.setCustomValidity(pwd1Input.title);
-
-      var pwd2Input = document.getElementById("field_pwd2");
-
-      // input key handlers
-
-      usernameInput.addEventListener("keyup", function() {
-        usernameInput.setCustomValidity(this.validity.patternMismatch ? usernameInput.title : "");
-      }, false);
-
-      pwd1Input.addEventListener("keyup", function() {
-        this.setCustomValidity(this.validity.patternMismatch ? pwd1Input.title : "");
-        if(this.checkValidity()) {
-          pwd2Input.pattern = this.value;
-          pwd2Input.setCustomValidity(pwd2Input.title);
-        } else {
-          pwd2Input.pattern = this.pattern;
-          pwd2Input.setCustomValidity("");
-        }
-      }, false);
-
-      pwd2Input.addEventListener("keyup", function() {
-        this.setCustomValidity(this.validity.patternMismatch ? pwd2Input.title : "");
-      }, false);
-
-    }
-
-  }, false);
-  </script>
 <script language="javascript">
     function Checkfiles()
     {
@@ -165,21 +100,6 @@ window.location = "index.php";
     }
     }
     </script>
-<script type="text/javascript" src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
-<script src="//cdn.jsdelivr.net/webshim/1.14.5/polyfiller.js"></script>
-<script>
-webshims.setOptions('forms-ext', {types: 'date'});
-webshims.polyfill('forms forms-ext');
-$.webshims.formcfg = {
-en: {
-    dFormat: '-',
-    dateSigns: '-',
-    patterns: {
-        d: "yy-mm-dd"
-    }
-}
-};
-</script>
 <link href="css/bootstrap.min.css" rel="stylesheet">
 <!-- Custom styles for this template -->
 <link href="navbar-fixed-top.css" rel="stylesheet">
@@ -228,6 +148,7 @@ en: {
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
+   
 </head>
 <body>
 <nav>
@@ -246,13 +167,13 @@ en: {
             <div class="form-group">
               <label class="col-md-5 control-label" for="rental">Name:</label>
               <div class="col-md-3">
-                <input type="text" name="fname" id = "fname" class="form-control input-md" pattern="[A-Za-z. ]{1,30}" required/>
+                <input type="text" name="fname" id = "fname" class="form-control input-md" pattern="[A-Za-z. ]{6,30}" required/>
               </div>
             </div>
             <div class="form-group">
               <label class="col-md-5 control-label">Father Name:</label>
               <div class="col-md-3">
-                <input type="text" name="fathername" id = "fathername" class="form-control input-md" pattern="[A-Za-z. ]{1,30}" required/>
+                <input type="text" name="fathername" id = "fathername" class="form-control input-md" pattern="[A-Za-z. ]{6,30}" required/>
               </div>
             </div>
             <div class="form-group">
@@ -303,7 +224,7 @@ en: {
             <div class="form-group">
               <label class="col-md-5 control-label" for="rental">Date of birth:</label>
               <div class="col-md-3">
-                <input type="date" name="dob" id = "date" class="form-control input-md" max="2050-12-31" min="1947-12-31" required/>
+             <input type="date" id="birthday" name="dob" size="20" max="2050-12-31" min="1947-12-31" class="form-control input-md" required/>
               </div>
             </div>
             <div class="form-group">
@@ -327,6 +248,7 @@ en: {
             <div class="form-group">
               <label class="col-md-5 control-label" for="rental">Contact No.:</label>
               <div class="col-md-3">
+               
                 <input type="text" name="contact" id = "contact" class="form-control input-md" title="input number only"  pattern="[0-9]{11}" title="Numbers Only" required/>
               </div>
             </div>
@@ -335,7 +257,7 @@ en: {
               <div class="col-md-3">
                 <li class="two">
                   <div class="left_nor">
-                    <input type="file" id="logo1" onChange="Checkfiles()" multiple accept='image/*' name="image" tabindex="20" value="<?php if($_POST["txtLogoFileName"]) echo $_POST["txtLogoFileName"]; else echo($LogofileName); ?>" />
+                    <input type="file" id="logo1" onChange="Checkfiles()" multiple accept='image/*' name="image" tabindex="20" value="<?php if($_POST["txtLogoFileName"]) echo $_POST["txtLogoFileName"]; else echo($LogofileName); ?>" required/>
                   </div>
                 </li>
               </div>
@@ -345,7 +267,7 @@ en: {
               <div class="col-md-3">
                 <li class="two">
                   <div class="left_nor">
-                    <input type="file" id="logo1" onChange="Checkfiles()" multiple accept='image/*' name="nicimage" tabindex="20" value="<?php if($_POST["txtLogoFileName"]) echo $_POST["txtLogoFileName"]; else echo($LogofileName); ?>" />
+                    <input type="file" id="logo1" onChange="Checkfiles()" multiple accept='image/*' name="nicimage" tabindex="20" value="<?php if($_POST["txtLogoFileName"]) echo $_POST["txtLogoFileName"]; else echo($LogofileName); ?>" required/>
                   </div>
                 </li>
               </div>
@@ -353,13 +275,13 @@ en: {
             <div class="form-group">
               <label class="col-md-5 control-label" for="rental">Password:</label>
               <div class="col-md-3">
-                <input id="field_pwd1" title="Password must contain at least 6 characters, including UPPER/lowercase and numbers." class="form-control input-md" type="password" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" name="pwd1">
+               <input type="password" placeholder="Password" id="password" class="form-control input-md" pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$" name="password" required>
               </div>
             </div>
             <div class="form-group">
               <label class="col-md-5 control-label" for="rental">Confirm Password:</label>
               <div class="col-md-3">
-                <input id="field_pwd2" title="Please enter the same Password as above." type="password" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" class="form-control input-md" name="pwd2">
+                <input type="password" placeholder="Confirm Password" id="confirm_password" class="form-control input-md" required>
               </div>
             </div>
             <div class="control-group">
@@ -381,6 +303,38 @@ en: {
 </div>
 <!-- /#wrapper -->
 <!-- jQuery Version 1.11.0 -->
+<script>
+var password = document.getElementById("password")
+  , confirm_password = document.getElementById("confirm_password");
+   
+function validatePassword(){
+  if(password.value != confirm_password.value) {
+    confirm_password.setCustomValidity("Passwords Don't Match");
+  } else {
+    confirm_password.setCustomValidity('');
+  }
+}
+
+password.onchange = validatePassword;
+confirm_password.onkeyup = validatePassword;
+</script>
+<script type="text/javascript">
+    var datefield=document.createElement("input")
+    datefield.setAttribute("type", "date")
+    if (datefield.type!="date"){ //if browser doesn't support input type="date", load files for jQuery UI Date Picker
+        document.write('<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css" />\n')
+        document.write('<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"><\/script>\n')
+        document.write('<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"><\/script>\n') 
+    }
+</script>
+ 
+<script>
+if (datefield.type!="date"){ //if browser doesn't support input type="date", initialize date picker widget:
+    jQuery(function($){ //on document.ready
+        $('#birthday').datepicker();
+    })
+}
+</script>
 <script src="js/jquery-1.11.0.js"></script>
 <!-- Bootstrap Core JavaScript -->
 <script src="js/bootstrap.min.js"></script>

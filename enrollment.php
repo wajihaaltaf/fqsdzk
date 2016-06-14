@@ -1,67 +1,75 @@
 <?php
 require_once('config.php');
+
+require_once 'PHPMailer/PHPMailerAutoload.php';
+
+define('GUSER', 'bisma@ayazahmed.com'); // GMail username
+define('GPWD', 'Bisma2015'); // GMail password
+DEFINE('WEBSITE_URL', 'http://localhost');
+
+
+function smtpmailer($to, $from, $from_name, $subject, $body) { 
+	global $error;
+	$mail = new PHPMailer();  // create a new object
+	$mail->IsSMTP(); // enable SMTP
+	$mail->SMTPDebug = 0;  // debugging: 1 = errors and messages, 2 = messages only
+	$mail->SMTPAuth = true;  // authentication enabled
+	$mail->SMTPSecure = 'ssl'; // secure transfer enabled REQUIRED for GMail
+	$mail->Host = 'srv10.hosterpk.com'; //smtp.gmail.com';
+	$mail->Port = 465; //465; 
+	$mail->Username = GUSER;  
+	$mail->Password = GPWD;           
+	$mail->SetFrom($from, $from_name);
+	$mail->Subject = $subject;
+	$mail->Body = $body;
+	$mail->AddAddress($to);
+	if(!$mail->Send())
+	{
+		$error = 'Mail error: '.$mail->ErrorInfo; 
+		echo $error;
+		return false;
+	} else {
+		$error = 'Message sent!';
+		return true;
+	}
+}
+
+?>
+<?php
+require_once('config.php');
 require_once('session1.php');
 ?>
 <?php if(isset($_POST['register']))
 {
-$count=0;
+$set=0;
+$isenrolled=0;
 $cand_id= $_SESSION['cand_id'];
-$station = $_POST['station'];
 $category= mysql_real_escape_string($_POST['category']);
 $module= mysql_real_escape_string($_POST['module']);
 $fees= mysql_real_escape_string($_POST['fees']);
 $mod = substr($module,0,9);
-
+$station = substr($module,21);
 $user_query = mysqli_query($con,"SELECT module.module_id,category.category_id FROM module,category WHERE module.category_id=category.category_id and module.module_name='$mod' and category.category_name='$category'")or die(mysqli_error($con));
 													while($row = mysqli_fetch_array($user_query)){	
 													$moduleid = $row['module_id'];
 													$categoryid = $row['category_id'];
 													}
-													$count= mysqli_num_rows($user_query);
-													echo $count;
 $user_query = mysqli_query($con,"SELECT max(enroll_date) as edate FROM enrollment WHERE cand_id='$cand_id' AND module_id='$moduleid' AND category_id='$categoryid' ")or die(mysql_error());
 													$row = mysqli_fetch_array($user_query);
-													$enrolldate = $row['edate'];
-												$enrolldate = new DateTime($enrolldate);
-$enrolldate->add(new DateInterval('P1Y'));
-$enrolldate= $enrolldate->format('Y-m-d');
+													if(mysqli_num_rows($user_query) > 0)
+													{$enrolldate = $row['edate'];
+												$enrolldat = new DateTime($enrolldate);
+                                                $enrolldat->add(new DateInterval('P1Y'));
+                                                $enrolldat= $enrolldat->format('Y-m-d');}
+												else { $set=1; }
 $user_query = mysqli_query($con,"select now() as date")or die(mysql_error());
 													$row = mysqli_fetch_array($user_query);
 													$date = $row['date'];
 												$date = new DateTime($date);
-$date= $date->format('Y-m-d');
-if($enrolldate > $date and $count<=3)
-{
-
-$user_query = mysqli_query($con,"SELECT * FROM enrollment WHERE cand_id='$cand_id' AND module_id='$moduleid' AND category_id='$categoryid'" ) or die(mysqli_error($con));
-if(mysqli_num_rows($user_query) > 0) {
-		while($rec = mysqli_fetch_array($user_query)){
-		$edate ="$rec[enroll_date]";
-		$date=date("Y/m/d"); }
-		$diff = abs(strtotime($date) - strtotime($edate));
-$years = floor($diff / (365*60*60*24));
-$months = floor(($diff - $years * 365*60*60*24) / (30*60*60*24));
-$days = floor(($diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60*24));
-if ($years >=0 && $months>=3 && $days>=0 && $mid==$moduleid && $cid==$cand_id)
-{ ?>
-<script>
-alert('You are not allowed to enroll in course before 3months');
-window.location.assign("enrollment.php");
-</script>
-<?php
-	}
-	else { ?>
-<script>
-alert('You are already enrolled');
-window.location.assign("enrollment.php");
-</script>
-<?php }} else {
-	$user_query = mysqli_query($con,"SELECT max(enroll_id) as enroll_id FROM enrollment WHERE cand_id=1 ") or die(mysqli_error($con));
-	$row = mysqli_fetch_array($user_query);
-													$enroll_id = $row['enroll_id'];
-									
-mysqli_query($con,"INSERT INTO `enrollment` (`enroll_id`, `cand_id`, `module_id`,`enroll_date`,station_id,category_id) VALUES ('', '$cand_id', '$moduleid',NOW(),'$station','$categoryid')")or die(mysqli_error($con));
-$user_query = mysqli_query($con,"SELECT balance FROM user_transaction WHERE user_transaction.cand_id='$cand_id' and transaction_time=(SELECT MAX(transaction_time) from user_transaction)")or die(mysqli_error($con));
+                                               $date= $date->format('Y-m-d');
+											   $user_query = mysqli_query($con,"SELECT isenrolled FROM `enrollment` WHERE `cand_id` = '$cand_id' AND `module_id` = '$moduleid' and isenrolled=1 ")or die(mysql_error());
+													$isenrolled=mysqli_num_rows($user_query);
+										$user_query = mysqli_query($con,"SELECT balance FROM user_transaction WHERE user_transaction.cand_id='$cand_id' and transaction_time=(SELECT MAX(transaction_time) from user_transaction)")or die(mysqli_error($con));
 													$row = mysqli_fetch_array($user_query);
 													$balance = $row['balance'];
 									if($balance > $fees)
@@ -69,55 +77,91 @@ $user_query = mysqli_query($con,"SELECT balance FROM user_transaction WHERE user
 									else { ?> <script>
 alert('You dont have sufficient amount to enroll in this course');
 window.location.assign("enrollment.php");
-</script><?php }
+</script><?php }	if($set==0){
+$diff = abs(strtotime($date) - strtotime($enrolldate));
+$years = floor($diff / (365*60*60*24));
+$months = floor(($diff - $years * 365*60*60*24) / (30*60*60*24));
+$days = floor(($diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60*24));
+if ($months<=3 and $isenrolled <3)
+{ ?>
+<script>
+alert('You are not allowed to enroll in course before 3months');
+window.location.assign("enrollment.php");
+</script>
+<?php
+} 
+if($enrolldat < $date and isenrolled==3)
+{
+?>
+<script>
+alert('You are not allowed to enroll in course before 1year');
+window.location.assign("enrollment.php");
+</script>
+<?php
+}
+if($years >=1 and isenrolled <3)
+{
+mysqli_query($con,"UPDATE enrollment SET isenrolled=0 where cand_id='$cand_id' and module_id='$moduleid' ")or die(mysqli_error($con));
+$set=1;
+}
+}
+if($set=1){
+mysqli_query($con,"INSERT INTO `enrollment` (`enroll_id`, `cand_id`, `module_id`,`enroll_date`,station_id,category_id,isenrolled) VALUES ('', '$cand_id', '$moduleid',NOW(),'$station','$categoryid','1')")or die(mysqli_error($con));
+$user_query = mysqli_query($con,"SELECT max(enroll_id) as enroll_id FROM enrollment WHERE cand_id='$cand_id' ") or die(mysqli_error($con));
+	$row = mysqli_fetch_array($user_query);
+													$enroll_id = $row['enroll_id'];
+									
 $select = "SELECT HOST FROM information_schema.processlist where id = connection_id()";
 $qry=mysqli_query($con,$select);
 		while($rec = mysqli_fetch_array($qry)){
 		$host = "$rec[HOST]";}
 $qry=mysqli_query($con,"INSERT INTO `user_transaction` (`transaction_id`, `cand_id`, `transaction_time`, `transaction_ipaddress`, `debit`, `credit`, `balance`) VALUES (NULL, '$cand_id', NOW(), '$host', '0', '$fees', '$balanc')")or die(mysqli_error($con));	
-}
  if($qry) {
+ mysqli_commit($con);
+ $message = "You are successfully enrolled in category :".$category." module:".$mod;
+               
+if (smtpmailer($candemail, 'techrisersnedcis@gmail.com', 'PIA| Enrollment Confirmation', 'Enrollment Confirmation', $message)) {
+	// Finish the page:
+                $msg='<div class="success">A confirmation email
+has been sent to '.$candemail.'  </div>';
+
+	
+}
 ?>
  <script>
 alert('You are Successfully enrolled in <?php echo $category."-".$mod; ?>');
 window.location.assign("enrollment.php");
 </script> <?php
 }else 
-{ ?>
+{ mysqli_rollback($con); 
+   $msg='<div class="errormsgbox">You could not be registered due to a system
+error. We apologize for any
+inconvenience.</div>';?>
 <script>
 alert('Error in Enrollment');
 window.location.assign("enrollment.php");
 </script>
 <?php
-}
-}
-else { ?> 
-<script>
-alert('You are not allowed to enroll in this course for one year');
-window.location.assign("enrollment.php");
-</script>
-<?php
-}
-}
- ?>
-<?php include('headercand.php'); ?>
-
+}}}
+?>
+<?php include('headcand.php'); ?>
 <nav>
 <div id="page-wrapper" class="page-wrapper-cls">
 <div id="page-inner">
   <div class="row">
     <div class="col-md-12">
+    
     <form class="form-horizontal" role="form" method="post">
       <h3>
         <center>
           Module Enrollment
         </center>
       </h3>
-      <br>
+      <br />
       <div class="form-group">
         <label class="col-md-5 control-label">Category:</label>
         <div class="col-md-3">
-          <select id="brand" name="category" class="form-control" required>
+          <select id="brand" name="category" class="form-control" required="required">
             <option value="">- select -</option>
             <option value="B1">B1</option>
             <option value="B2">B2</option>
@@ -127,28 +171,11 @@ window.location.assign("enrollment.php");
       <div class="form-group">
         <label class="col-md-5 control-label" for="room">Module:</label>
         <div class="col-md-3">
-          <select id="type" name="module" class="form-control" required>
+          <select id="type" name="module" class="form-control" required="required">
           </select>
         </div>
       </div>
-      <div class="form-group">
-        <label class="col-md-5 control-label" for="room">Station:</label>
-        <div class="col-md-3">
-          <select id="dept_id" name="station" class="form-control" required/>
-          
-          <option></option>
-          <?php 
-						$query=mysqli_query($con,"SELECT * FROM station ORDER by station_name");
-						while($row=mysqli_fetch_array($query))
-						 { 
-						 $sel= "selected";
-						 	?>
-          <option value="<?php echo $row['station_id'];?>" <?=$sel?> > <?php echo $row['station_name'];?> </option>
-          <?php 
-						} ?>
-          </select>
-        </div>
-      </div>
+     
       <?php $cand_id= $_SESSION['cand_id'];
 	  $user_query = mysqli_query($con,"select * from candidate where cand_id='$cand_id'")or die(mysqli_error($con));
 													$row = mysqli_fetch_array($user_query);
@@ -160,18 +187,18 @@ window.location.assign("enrollment.php");
                <div class="form-group">
         <label class="col-md-5 control-label" for="room">Fees:</label>
         <div class="col-md-3">
-             <input type="text" name="fees" value="<?php echo $fees; ?>" class="form-control" readonly/>
+             <input type="text" name="fees" value="<?php echo $fees; ?>" class="form-control" readonly="readonly"/>
              </div></div>
       <div class="control-group">
         <div class="controls" align="center">
           <button type="submit" id="submit" name="register" class="btn btn-success">ADD</button>
-          <a button id="cancel" name="cancel" class="btn btn-danger" href="admin.php" >Cancel
+          <a button="button" id="cancel" name="cancel" class="btn btn-danger" href="admin.php" >Cancel
           </button>
-          </a> <br>
-          <br>
-          <br>
-          <br>
-          <br>
+          </a> <br />
+          <br />
+          <br />
+          <br />
+          <br />
         </div>
       </div>
       </div>
@@ -194,12 +221,12 @@ var optionsList = {
         
 								<?php 
 								
-						$user_query = mysqli_query($con,"SELECT module.module_name,DATE_FORMAT( schedule.exam_date, '%d-%m-%Y' ) as exam_date,schedule.station_id FROM module,schedule WHERE schedule.module_id=module.module_id AND module.category_id=1 and schedule.exam_deadline > NOW()")or die(mysqli_error($con));
+						$user_query = mysqli_query($con,"SELECT module.module_name,DATE_FORMAT( schedule.exam_date, '%d-%m-%Y' ) as exam_date,station.station_name FROM module,schedule,station WHERE schedule.module_id=module.module_id AND module.category_id=1 and schedule.exam_deadline > NOW() and schedule.station_id=station.station_id ")or die(mysqli_error($con));
 													while($row = mysqli_fetch_array($user_query)){
 													$module_name = $row['module_name'];
 													$module_edate = $row['exam_date'];
-													$module_station=$row['station_id'];
-												$module = $module_name."-".$module_edate;
+													$module_station=$row['station_name'];
+													$module = $module_name."-".$module_edate."-".$module_station;
 									printf("'$module',");
 						 	}?>
 							
@@ -209,15 +236,14 @@ var optionsList = {
 					
 								<?php 
 								
-						$user_query = mysqli_query($con,"SELECT module.module_name,DATE_FORMAT( schedule.exam_date,  '%d-%m-%Y' ) as exam_date,schedule.station_id FROM module,schedule WHERE schedule.module_id=module.module_id AND module.category_id=2 and schedule.exam_deadline > NOW()")or die(mysqli_error($con));
+					$user_query = mysqli_query($con,"SELECT module.module_name,DATE_FORMAT( schedule.exam_date, '%d-%m-%Y' ) as exam_date,station.station_name FROM module,schedule,station WHERE schedule.module_id=module.module_id AND module.category_id=2 and schedule.exam_deadline > NOW() and schedule.station_id=station.station_id ")or die(mysqli_error($con));
 													while($row = mysqli_fetch_array($user_query)){
 													$module_name = $row['module_name'];
 													$module_edate = $row['exam_date'];
-													$module_station=$row['station_id'];
-													//$station_name = get_stname();
-													$module = $module_name."-".$module_edate;
+													$module_station=$row['station_name'];
+													$module = $module_name."-".$module_edate."-".$module_station;
 									printf("'$module',");
-						 	}?>
+									}?>
     ]
 };
 

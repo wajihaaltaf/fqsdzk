@@ -1,51 +1,9 @@
-<!DOCTYPE html>
+                                                 <!DOCTYPE html>
 <html lang="en">
 
 <head>
 
     <meta charset="utf-8">
-<link href='fullcalendar.css' rel='stylesheet' />
-<link href='fullcalendar.print.css' rel='stylesheet' media='print' />
-<script src='lib/moment.min.js'></script>
-<script src='lib/jquery.min.js'></script>
-<script src='fullcalendar.min.js'></script>
-<script>
-
-	$(document).ready(function() {
-
-		$('#calendar').fullCalendar({
-			defaultDate: '2016-05-12',
-			editable: true,
-			eventLimit: true, // allow "more" link when too many events
-			events: [
-			<?php $user_query = mysqli_query($con,"SELECT module.module_name,category.category_name,schedule.exam_date FROM module,category,schedule WHERE module.category_id=category.category_id and schedule.module_id=module.module_id ")or die(mysqli_error($con));
-													while($row = mysqli_fetch_array($user_query)){
-													printf("{title: '%s', start: '%s'},", $row[0]."-".$row[1], $row[2]);
-													?>
-			
-			<?php } ?>
-			]
-			
-		});
-		
-	});
-
-</script>
-<style>
-
-	body {
-		margin: 40px 10px;
-		padding: 0;
-		font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
-		font-size: 14px;
-	}
-
-	#calendar {
-		max-width: 900px;
-		margin: 0 auto;
-	}
-
-</style>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
@@ -183,4 +141,3 @@
         </nav>
   <div id="page-wrapper">
             <div class="container-fluid">
-      

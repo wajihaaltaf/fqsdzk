@@ -4,6 +4,7 @@ require_once('config.php');
 <?php
 $r =1; 
 $s=1;
+
 //Start session
 session_start();
 	//Function to sanitize values received from the form. Prevents SQL injection
@@ -70,15 +71,18 @@ while($rec = mysqli_fetch_array($qry)){
 			exit();
 			}
 			}
-			else { $s=0; }
+			else { $s=0;  }
 			}
 		if($s==0 && $r==0) {
+		
 		$user_query = mysqli_query($con,"select isactive from candidate where cand_email = '$email'")or die(mysql_ereror());
 													while($row = mysqli_fetch_array($user_query)){
 													$isactive = $row['isactive'];
 													}
-												if($isactive ==0) {header("location: login_errors.php"); exit(); }
-													else{ header("location: login_error.php"); exit();}
+													if(mysqli_num_rows($user_query)>0){
+											if($isactive ==0) {header("location: login_errors.php"); exit(); }
+												else {header("location: login_error.php"); exit();} }
+												else {header("location: login_error.php"); exit();} 
 		} 
 	
 ?>

@@ -2,8 +2,7 @@
 require_once('config.php');
 require_once('session1.php');
 ?>
-<?php include('headercand.php'); ?>
-<nav>
+
 <?php
 $cand_id=$_SESSION['cand_id'];
 	$user_query = mysqli_query($con,"select * from candidate where cand_id=$cand_id")or die(mysqli_error($con));
@@ -25,8 +24,9 @@ $cand_id=$_SESSION['cand_id'];
 													$activation = $row['Activation'];
 													}
 													?>
+                                                    <?php include('headcand.php'); ?>
 
- <nav>
+      <nav>
   <div id="page-wrapper" class="page-wrapper-cls">
             <div id="page-inner">
                 <div class="row">
