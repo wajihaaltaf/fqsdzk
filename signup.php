@@ -268,9 +268,9 @@ print ' value="' . $_POST['organization'] . '"';
               </div>
             </div>
             <div class="form-group">
-              <label class="col-md-5 control-label">NIC: [14Digit Number]</label>
+              <label class="col-md-5 control-label">NIC: [13Digit Number]</label>
               <div class="col-md-3">
-                <input type="text" name="nic" id = "nic" class="form-control input-md" pattern="[0-9]{14}" title="Numbers Only" <?php
+                <input type="text" name="nic" id = "nic" class="form-control input-md" pattern="[0-9]{13}" title="Numbers Only" <?php
 if ( $_POST['nic'] ) {
 print ' value="' . $_POST['nic'] . '"';
 } ?> required/>
