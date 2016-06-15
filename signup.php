@@ -208,7 +208,7 @@ else {
             <div class="form-group">
               <label class="col-md-5 control-label" for="rental">Name:</label>
               <div class="col-md-3">
-                <input type="text" name="fname" id = "fname" class="form-control input-md" pattern="[A-Za-z. ]{6,30}" <?php
+                <input type="text" name="fname" id = "fname" class="form-control input-md" pattern="[A-Za-z. ]{3,30}" <?php
 if ( $_POST['fname'] ) {
 print ' value="' . $_POST['fname'] . '"';
 } ?> required/>
@@ -217,7 +217,7 @@ print ' value="' . $_POST['fname'] . '"';
             <div class="form-group">
               <label class="col-md-5 control-label">Father Name:</label>
               <div class="col-md-3">
-                <input type="text" name="fathername" id = "fathername" class="form-control input-md" pattern="[A-Za-z. ]{6,30}" <?php
+                <input type="text" name="fathername" id = "fathername" class="form-control input-md" pattern="[A-Za-z. ]{3,30}" <?php
 if ( $_POST['fathername'] ) {
 print ' value="' . $_POST['fathername'] . '"';
 } ?> required/>
