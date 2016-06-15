@@ -4,11 +4,11 @@
 <head>
 
     <meta charset="utf-8">
-<link href='fullcalendar.css' rel='stylesheet' />
-<link href='fullcalendar.print.css' rel='stylesheet' media='print' />
+<link href='js/fullcalendar.css' rel='stylesheet' />
+<link href='js/fullcalendar.print.css' rel='stylesheet' media='print' />
 <script src='lib/moment.min.js'></script>
 <script src='lib/jquery.min.js'></script>
-<script src='fullcalendar.min.js'></script>
+<script src='js/fullcalendar.min.js'></script>
 <script>
 
 	$(document).ready(function() {
@@ -53,7 +53,7 @@
 	<!-- Bootstrap core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom styles for this template -->
-    <link href="navbar-fixed-top.css" rel="stylesheet">
+    <link href="css/navbar-fixed-top.css" rel="stylesheet">
 
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->

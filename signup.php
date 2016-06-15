@@ -1,6 +1,8 @@
 <?php
 require_once('config.php');
 ?>
+<?php if (!isset($_POST['register'])){ $_POST['fname']= NULL; $_POST['fathername']= NULL; $_POST['dob']=NULL; $_POST['pob']=NULL; $_POST['organization']= NULL; $_POST['paddress']=NULL; $_POST['caddress']=NULL; 
+$_POST['contact']=NULL; $_POST['image']=NULL; $_POST['nicimage']=NULL; $_POST['nic']=NULL;} ?>
 <?php
 	if (isset($_POST['register'])){
 	$firstname=mysql_real_escape_string($_POST['fname']);
@@ -10,6 +12,8 @@ require_once('config.php');
 	$NIC=mysql_real_escape_string($_POST['nic']);
 	$gender=mysql_real_escape_string($_POST['gender']);
 	$bdate=mysql_real_escape_string($_POST['dob']);
+	$bdate = date('d-m-Y', strtotime(str_replace('-','/',$bdate))); 
+	$bdate = date('Y-m-d', strtotime($bdate));
 	$pob=mysql_real_escape_string($_POST['pob']);
 	$organization=mysql_real_escape_string($_POST['organization']);
 	$paddress=mysql_real_escape_string($_POST['paddress']);
@@ -18,16 +22,15 @@ require_once('config.php');
 	$password = md5(mysql_real_escape_string($_POST['password']));
     $img = mysql_real_escape_string($_POST['image']);
 	$nicimg = mysql_real_escape_string($_POST['nicimage']);
-	$f = mysqli_query($con,"SELECT cand_id from candidate where cand_email='$email' or cand_nic='$NIC' or cand_contactno='$contact' ")or die(mysqli_error($con));
+	
+	$f = mysqli_query($con,"SELECT cand_id from candidate where cand_email='$email' or cand_nic='$NIC' or cand_contactno='$contact' or Ref_id='$refid' ")or die(mysqli_error($con));
 													$count = mysqli_num_rows($f);
 													if($count <= 0)
 													{
 	$checking=mysqli_query($con,"INSERT INTO `candidate` (`Ref_id`, `cand_id`, `cand_password`, `cand_full_name`, `cand_father_name`, `cand_nic`, `cand_dob`, `cand_gender`, `cand_contactno`, `cand_email`, `cand_permenant_address`, `cand_current_address`, `cand_nic_attachment`, `cand_profile_pic`,`cand_pob`,`cand_organization`,`isactive`) VALUES ('0', '', '$password', '$firstname', '$fathername', '$NIC', '$bdate', '$gender', '$contact', '$email', '$paddress', '$caddress','$nicimg','$img','$pob','$organization','0')")or die(mysqli_error($con));
 	if($checking)
 	{
- $user_query = mysqli_query($con,"SELECT org_stn FROM `Organization` where org_name='$organization' ")or die(mysqli_error($con));
-													$row = mysqli_fetch_array($user_query);
-													$org = $row['org_stn'];
+ if($organization=="Pakistan International Airlines") {$org="PIA"; } else {$org="PVT"; }
  if($_POST['refid']=='')
 {
 $select = "SELECT max(cand_id) as cand_id FROM candidate";
@@ -67,7 +70,47 @@ window.location = "index.php";
 </script>
 <?php }}
 else {
-  echo "information already exist";
+   $f = mysqli_query($con,"SELECT cand_id from candidate where  cand_nic='$NIC'  ")or die(mysqli_error($con));
+													$count = mysqli_num_rows($f);
+													$f = mysqli_query($con,"SELECT cand_email from candidate where  cand_email='$email'  ")or die(mysqli_error($con));
+													$count1 = mysqli_num_rows($f);
+													$f = mysqli_query($con,"SELECT cand_contactno from candidate where  cand_contactno='$contact'  ")or die(mysqli_error($con));
+													$count2 = mysqli_num_rows($f);
+													$f = mysqli_query($con,"SELECT cand_contactno from candidate where Ref_id='$refid'")or die(mysqli_error($con));
+													$count3 = mysqli_num_rows($f);
+ if( $count>0 AND $count1<=0 AND $count2<=0 and $count3<=0) {
+ ?> <script> alert('NIC already exist!'); </script> <?php }
+ else if($count<=0 AND $count1>0 AND $count2<=0 and $count3<=0) {
+ ?> <script> alert('email already exist!'); </script> <?php }
+ else if ($count<=0 AND $count1<=0 AND $count2>0 and $count3<=0)
+ {?> <script> alert('contact no already exist!'); </script> <?php
+ }
+  else if ($count<=0 AND $count1<=0 AND $count2<=0 and $count3>0)
+ {?> <script> alert('Refrence id already exist!'); </script> <?php
+ }
+ else if( $count>0 AND $count1>0 AND $count2<=0 and $count3<=0) {
+ ?> <script> alert('NIC and email already exist!'); </script> <?php }
+ else if( $count>0 AND $count1<=0 AND $count2>0 and $count3<=0) {
+ ?> <script> alert('NIC and contact number already exist!'); </script> <?php }
+ else if( $count<=0 AND $count1>0 AND $count2>0 and $count3<=0) {
+ ?> <script> alert('Email and contact number already exist!'); </script> <?php }
+ else if( $count<=0 AND $count1<=0 AND $count2>0 and $count3>0) {
+ ?> <script> alert('Refrence_id and contact number already exist!'); </script> <?php }
+ else if( $count<=0 AND $count1>0 AND $count2<=0 and $count3>0) {
+ ?> <script> alert('Refrence_id and Email already exist!'); </script> <?php }
+ else if( $count>0 AND $count1<=0 AND $count2<=0 and $count3>0) {
+ ?> <script> alert('Refrence_id and NIC already exist!'); </script> <?php }
+ else if( $count>0 AND $count1>0 AND $count2>0 and $count3<=0) {
+ ?> <script> alert('NIC,Email and Contact already exist!'); </script> <?php }
+ else if( $count>0 AND $count1>0 AND $count2<=0 and $count3>0) {
+ ?> <script> alert('NIC,Email and Refrence_id already exist!'); </script> <?php }
+  else if( $count>0 AND $count1<=0 AND $count2>0 and $count3>0) {
+ ?> <script> alert('NIC,contactno and Refrence_id already exist!'); </script> <?php }
+  else if( $count<=0 AND $count1>0 AND $count2>0 and $count3>0) {
+ ?> <script> alert('Email,contact number and Refrence_id already exist!'); </script> <?php }
+ else {
+ ?> <script> alert('NIC, Email and contact number already exist!'); </script> <?php
+ }
 }
 }
 
@@ -81,7 +124,6 @@ else {
 <meta name="description" content="">
 <meta name="author" content="">
 <!-- Bootstrap core CSS -->
-
 <script language="javascript">
     function Checkfiles()
     {
@@ -148,7 +190,6 @@ else {
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
-   
 </head>
 <body>
 <nav>
@@ -167,13 +208,19 @@ else {
             <div class="form-group">
               <label class="col-md-5 control-label" for="rental">Name:</label>
               <div class="col-md-3">
-                <input type="text" name="fname" id = "fname" class="form-control input-md" pattern="[A-Za-z. ]{6,30}" required/>
+                <input type="text" name="fname" id = "fname" class="form-control input-md" pattern="[A-Za-z. ]{6,30}" <?php
+if ( $_POST['fname'] ) {
+print ' value="' . $_POST['fname'] . '"';
+} ?> required/>
               </div>
             </div>
             <div class="form-group">
               <label class="col-md-5 control-label">Father Name:</label>
               <div class="col-md-3">
-                <input type="text" name="fathername" id = "fathername" class="form-control input-md" pattern="[A-Za-z. ]{6,30}" required/>
+                <input type="text" name="fathername" id = "fathername" class="form-control input-md" pattern="[A-Za-z. ]{6,30}" <?php
+if ( $_POST['fathername'] ) {
+print ' value="' . $_POST['fathername'] . '"';
+} ?> required/>
               </div>
             </div>
             <div class="form-group">
@@ -185,9 +232,12 @@ else {
             <div class="form-group">
               <label class="col-md-5 control-label" for="room">Organization:</label>
               <div class="col-md-3">
-                <select id="dept_id" name="organization" class="form-control" required/>
+                <select id="dept_id" name="organization" class="form-control" required <?php
+if ( $_POST['organization'] ) {
+print ' value="' . $_POST['organization'] . '"';
+} ?>/>
                 
-                <option></option>
+                
                 <?php 
 						$query=mysqli_query($con,"SELECT * FROM `Organization` ORDER by org_name");
 						while($row=mysqli_fetch_array($query))
@@ -197,14 +247,16 @@ else {
                 <option value="<?php echo $row['org_name'];?>" <?=$sel?> > <?php echo $row['org_name'];?> </option>
                 <?php 
 						} ?>
+                        <option>Other</option> 
                 </select>
               </div>
             </div>
             <div class="form-group">
               <label class="col-md-5 control-label">Gender:</label>
               <div class="col-md-3">
-                <div class="input-group">
-                  <div id="radioBtn" class="btn-group"> <a class="btn btn-primary btn-sm notActive" data-toggle="gender" data-title="Male">Male</a> <a class="btn btn-primary btn-sm notActive" data-toggle="gender" data-title="Female">Female</a> </div>
+                 <div class="input-group">
+                  <div id="radioBtn" class="btn-group" required> <a class="btn btn-primary btn-sm Active" data-toggle="gender"
+			data-title="Male">Male</a> <a class="btn btn-primary btn-sm notActive" data-toggle="gender" data-title="Female">Female</a> </div>
                   <input type="hidden" name="gender" id="gender" required>
                 </div>
               </div>
@@ -218,38 +270,53 @@ else {
             <div class="form-group">
               <label class="col-md-5 control-label">NIC: [14Digit Number]</label>
               <div class="col-md-3">
-                <input type="text" name="nic" id = "nic" class="form-control input-md" pattern="[0-9]{14}" title="Numbers Only" required/>
+                <input type="text" name="nic" id = "nic" class="form-control input-md" pattern="[0-9]{14}" title="Numbers Only" <?php
+if ( $_POST['nic'] ) {
+print ' value="' . $_POST['nic'] . '"';
+} ?> required/>
               </div>
             </div>
             <div class="form-group">
               <label class="col-md-5 control-label" for="rental">Date of birth:</label>
               <div class="col-md-3">
-             <input type="date" id="birthday" name="dob" size="20" max="2050-12-31" min="1947-12-31" class="form-control input-md" required/>
+                <input type="date" id="birthday" name="dob" size="20" max="2050-12-31" min="1950-12-31" class="form-control input-md" placeholder="dd/mm/yyyy" <?php
+if ( $_POST["dob"] ) {
+print ' value="' . $_POST["dob"] . '"';
+} ?>  required/>
               </div>
             </div>
             <div class="form-group">
               <label class="col-md-5 control-label">Place of birth:</label>
               <div class="col-md-3">
-                <input type="text" name="pob" id = "pob" class="form-control input-md"  pattern="[A-Za-z. ]{1,20}"  required/>
+                <input type="text" name="pob" id = "pob" class="form-control input-md"  pattern="[A-Za-z. ]{1,20}" <?php
+if ( $_POST['pob'] ) {
+print ' value="' . $_POST['pob'] . '"';
+} ?> required/>
               </div>
             </div>
             <div class="form-group">
               <label class="col-md-5 control-label" for="rental">Permenant Address:</label>
               <div class="col-md-3">
-                <input type="text" name="paddress" id = "address" class="form-control input-md" pattern="[A-Za-z0-9.#/\-_,' ]{6,200}"  required/>
+                <input type="text" name="paddress" id = "address" class="form-control input-md" pattern="[A-Za-z0-9.#/\-_,' ]{6,200}"  <?php
+if ( $_POST["paddress"] ) {
+print ' value="' . $_POST["paddress"] . '"';
+} ?>   required/>
               </div>
             </div>
             <div class="form-group">
               <label class="col-md-5 control-label" for="rental">Current Address:</label>
               <div class="col-md-3">
-                <input type="text" name="caddress" id = "address" class="form-control input-md"  pattern="[A-Za-z0-9.#/\-_,' ]{6,200}" required/>
+                <input type="text" name="caddress" id = "address" class="form-control input-md"  pattern="[A-Za-z0-9.#/\-_,' ]{6,200}" <?php
+if ( $_POST['caddress'] ) {
+print ' value="' . $_POST['caddress'] . '"';
+} ?> required/>
               </div>
             </div>
             <div class="form-group">
               <label class="col-md-5 control-label" for="rental">Contact No.:</label>
               <div class="col-md-3">
-               
-                <input type="text" name="contact" id = "contact" class="form-control input-md" title="input number only"  pattern="[0-9]{11}" title="Numbers Only" required/>
+              
+             <input type="text" name="contact" id = "contact" class="form-control input-md" title="input number only"  pattern="[0-9]{11}" title="Numbers Only" required/>
               </div>
             </div>
             <div class="form-group">
@@ -257,7 +324,10 @@ else {
               <div class="col-md-3">
                 <li class="two">
                   <div class="left_nor">
-                    <input type="file" id="logo1" onChange="Checkfiles()" multiple accept='image/*' name="image" tabindex="20" value="<?php if($_POST["txtLogoFileName"]) echo $_POST["txtLogoFileName"]; else echo($LogofileName); ?>" required/>
+                    <input type="file" id="logo1" onChange="Checkfiles()" multiple accept='image/*' name="image" tabindex="20" value="<?php if($_POST["txtLogoFileName"]) echo $_POST["txtLogoFileName"]; else echo($LogofileName); ?>" <?php
+if ( $_POST['image'] ) {
+print ' value="' . $_POST['image'] . '"';
+} ?> required/>
                   </div>
                 </li>
               </div>
@@ -275,7 +345,11 @@ else {
             <div class="form-group">
               <label class="col-md-5 control-label" for="rental">Password:</label>
               <div class="col-md-3">
-               <input type="password" placeholder="Password" id="password" class="form-control input-md" pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$" name="password" required>
+                <input type="password" placeholder="Password" id="password" class="form-control input-md" pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$" name="password" <?php
+if ( $_POST['nicimage'] ) {
+print ' value="' . $_POST['nicimage'] . '"';
+} ?> 
+required>
               </div>
             </div>
             <div class="form-group">
@@ -327,7 +401,6 @@ confirm_password.onkeyup = validatePassword;
         document.write('<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"><\/script>\n') 
     }
 </script>
- 
 <script>
 if (datefield.type!="date"){ //if browser doesn't support input type="date", initialize date picker widget:
     jQuery(function($){ //on document.ready

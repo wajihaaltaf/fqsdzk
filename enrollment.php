@@ -41,7 +41,6 @@ require_once('session1.php');
 ?>
 <?php if(isset($_POST['register']))
 {
-$set=0;
 $isenrolled=0;
 $cand_id= $_SESSION['cand_id'];
 $category= mysql_real_escape_string($_POST['category']);
@@ -49,6 +48,9 @@ $module= mysql_real_escape_string($_POST['module']);
 $fees= mysql_real_escape_string($_POST['fees']);
 $mod = substr($module,0,9);
 $station = substr($module,21);
+$user_query = mysqli_query($con,"select station_id from station where station_name='$station'")or die(mysqli_error($con));
+													while($row = mysqli_fetch_array($user_query)){	
+													$station = $row['station_id'];}
 $user_query = mysqli_query($con,"SELECT module.module_id,category.category_id FROM module,category WHERE module.category_id=category.category_id and module.module_name='$mod' and category.category_name='$category'")or die(mysqli_error($con));
 													while($row = mysqli_fetch_array($user_query)){	
 													$moduleid = $row['module_id'];
@@ -58,68 +60,67 @@ $user_query = mysqli_query($con,"SELECT max(enroll_date) as edate FROM enrollmen
 													$row = mysqli_fetch_array($user_query);
 													if(mysqli_num_rows($user_query) > 0)
 													{$enrolldate = $row['edate'];
-												$enrolldat = new DateTime($enrolldate);
-                                                $enrolldat->add(new DateInterval('P1Y'));
-                                                $enrolldat= $enrolldat->format('Y-m-d');}
-												else { $set=1; }
+													$futureDate=date('Y-m-d', strtotime('+1 year', strtotime($enrolldate)) );
+													}
+												
 $user_query = mysqli_query($con,"select now() as date")or die(mysql_error());
 													$row = mysqli_fetch_array($user_query);
 													$date = $row['date'];
 												$date = new DateTime($date);
                                                $date= $date->format('Y-m-d');
-											   $user_query = mysqli_query($con,"SELECT isenrolled FROM `enrollment` WHERE `cand_id` = '$cand_id' AND `module_id` = '$moduleid' and isenrolled=1 ")or die(mysql_error());
+$user_query = mysqli_query($con,"SELECT isenrolled FROM `enrollment` WHERE `cand_id` = '$cand_id' AND `module_id` = '$moduleid' and isenrolled=1 ")or die(mysql_error());
 													$isenrolled=mysqli_num_rows($user_query);
-										$user_query = mysqli_query($con,"SELECT balance FROM user_transaction WHERE user_transaction.cand_id='$cand_id' and transaction_time=(SELECT MAX(transaction_time) from user_transaction)")or die(mysqli_error($con));
+		$user_query = mysqli_query($con,"SELECT balance FROM user_transaction WHERE user_transaction.cand_id='$cand_id' and transaction_time=(SELECT MAX(transaction_time) from user_transaction)")or die(mysqli_error($con));
 													$row = mysqli_fetch_array($user_query);
 													$balance = $row['balance'];
-									if($balance > $fees)
+									if($balance >= $fees)
 									{$balanc=$balance- $fees;}
 									else { ?> <script>
 alert('You dont have sufficient amount to enroll in this course');
 window.location.assign("enrollment.php");
-</script><?php }	if($set==0){
+</script><?php exit(); }
+
 $diff = abs(strtotime($date) - strtotime($enrolldate));
 $years = floor($diff / (365*60*60*24));
 $months = floor(($diff - $years * 365*60*60*24) / (30*60*60*24));
 $days = floor(($diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60*24));
-if ($months<=3 and $isenrolled <3)
+
+if ($months<=3 and $isenrolled<=3)
 { ?>
 <script>
 alert('You are not allowed to enroll in course before 3months');
 window.location.assign("enrollment.php");
 </script>
 <?php
+exit();
 } 
-if($enrolldat < $date and isenrolled==3)
-{
-?>
+if ($futureDate > $date and $isenrolled>=3)
+{ ?>
 <script>
 alert('You are not allowed to enroll in course before 1year');
 window.location.assign("enrollment.php");
 </script>
 <?php
-}
-if($years >=1 and isenrolled <3)
-{
-mysqli_query($con,"UPDATE enrollment SET isenrolled=0 where cand_id='$cand_id' and module_id='$moduleid' ")or die(mysqli_error($con));
-$set=1;
-}
-}
-if($set=1){
-mysqli_query($con,"INSERT INTO `enrollment` (`enroll_id`, `cand_id`, `module_id`,`enroll_date`,station_id,category_id,isenrolled) VALUES ('', '$cand_id', '$moduleid',NOW(),'$station','$categoryid','1')")or die(mysqli_error($con));
+exit();
+} 
+if($isenrolled == 3)
+{$mysqli_query($con,"UPDATE enrollment SET isenrolled=0 where cand_id='$cand_id' and module_id='$moduleid' ")or die(mysqli_error($con));}
+
+$query=mysqli_query($con,"INSERT INTO `enrollment` (enroll_id,cand_id,module_id,enroll_date,station_id,category_id,isenrolled) VALUES ('', '$cand_id', '$moduleid',NOW(),'$station','$categoryid',1)")or die(mysqli_error($con));
 $user_query = mysqli_query($con,"SELECT max(enroll_id) as enroll_id FROM enrollment WHERE cand_id='$cand_id' ") or die(mysqli_error($con));
 	$row = mysqli_fetch_array($user_query);
 													$enroll_id = $row['enroll_id'];
-									
+							
 $select = "SELECT HOST FROM information_schema.processlist where id = connection_id()";
 $qry=mysqli_query($con,$select);
 		while($rec = mysqli_fetch_array($qry)){
 		$host = "$rec[HOST]";}
-$qry=mysqli_query($con,"INSERT INTO `user_transaction` (`transaction_id`, `cand_id`, `transaction_time`, `transaction_ipaddress`, `debit`, `credit`, `balance`) VALUES (NULL, '$cand_id', NOW(), '$host', '0', '$fees', '$balanc')")or die(mysqli_error($con));	
- if($qry) {
+$qry=mysqli_query($con,"INSERT INTO `user_transaction` (`transaction_id`, `cand_id`, `enroll_id`,`transaction_time`, `transaction_ipaddress`, `debit`, `credit`, `balance`) VALUES (NULL, '$cand_id','$enroll_id', NOW(), '$host', '0', '$fees', '$balanc')")or die(mysqli_error($con));	
+ if($qry and $query)
+ {
  mysqli_commit($con);
  $message = "You are successfully enrolled in category :".$category." module:".$mod;
-               
+               $candemail = $_SESSION['email'];
 if (smtpmailer($candemail, 'techrisersnedcis@gmail.com', 'PIA| Enrollment Confirmation', 'Enrollment Confirmation', $message)) {
 	// Finish the page:
                 $msg='<div class="success">A confirmation email
@@ -142,7 +143,7 @@ alert('Error in Enrollment');
 window.location.assign("enrollment.php");
 </script>
 <?php
-}}}
+}}
 ?>
 <?php include('headcand.php'); ?>
 <nav>

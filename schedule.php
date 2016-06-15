@@ -48,7 +48,7 @@ window.location = "schedule.php";
     <form class="form-horizontal" role="form" method="post">
       <h3>
         <center>
-          Module Enrollment
+          ADD EXAM SCHEDULE
         </center>
       </h3>
       <br>

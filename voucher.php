@@ -5,6 +5,8 @@ require_once('config.php');
 require_once('session2.php');
 ?>
 <?php
+if (!isset($_POST['update'])){ $_POST['vdate']=NULL; $_POST['vamount']=NULL;} ?>
+<?php
 		if (isset($_POST['update'])){
 	$vdate= mysql_real_escape_string($_POST['vdate']);
 	$vamount = mysql_real_escape_string($_POST['vamount']);
@@ -12,10 +14,13 @@ require_once('session2.php');
 	$vimage= mysql_real_escape_string($_POST['vimage']);
 	$id= mysql_real_escape_string($_POST['ref_id']);
 	$adminid= mysql_real_escape_string($_SESSION['id']);
+	$user_query = mysqli_query($con,"select * from voucher where voucher_id='$vid'")or die(mysqli_error($con));
+	$count=mysqli_num_rows($user_query);
 	$user_query = mysqli_query($con,"select cand_id from candidate where ref_id='$id'")or die(mysqli_error($con));
 													while($row = mysqli_fetch_array($user_query)){	
 													$cand = $row['cand_id'];}
-													
+													$count1=mysqli_num_rows($user_query);
+													if($count1>0 and $count<=0){
 		mysqli_query($con,"INSERT INTO `voucher` (`voucher_id`, `voucher_amount`, `Ref_id`, `voucher_attachment`,`voucher_date`, `voucher_entry_date`, `admin_id`) VALUES ('$vid', '$vamount', '$id','$vimage','$vdate', NOW(), '$adminid') ")or die(mysqli_error($con));
 		
 			$select = "SELECT HOST FROM information_schema.processlist where id = connection_id()";
@@ -27,17 +32,11 @@ $qry=mysqli_query($con,$select);
 													while($row = mysqli_fetch_array($user_query)){	
 													$vs = $row['vs'];}
 													
-				$user_query = mysqli_query($con,"SELECT max(balance) as balance FROM user_transaction WHERE cand_id='$cand'")or die(mysqli_error($con));
+				$user_query = mysqli_query($con,"SELECT balance as balance FROM user_transaction WHERE cand_id='$cand' and transaction_time= (select max(transaction_time) from user_transaction)")or die(mysqli_error($con));
 													while($row = mysqli_fetch_array($user_query)){	
-													$balance = $row['balance'];}		
-if($balance==0) { if($vs==0) { ?>
-<script>
-alert('Voucher is not inserted');
-window.location = "finance.php";
-</script>
-<?php
-} else { $bal= $vs; }
-} else {$bal= $balance; }
+													$balance = $row['balance'];}
+			
+$bal= $balance+$vamount;
 
 $checking=mysqli_query($con,"INSERT INTO `user_transaction` (`transaction_id`, `cand_id`, `transaction_time`, `transaction_ipaddress`, `debit`, `credit`, `balance`) VALUES (NULL, '$cand', NOW(), '$host', '$vamount', '0', '$bal');")or die(mysqli_error($con));	
 if($checking)
@@ -50,7 +49,14 @@ alert('Voucher Inserted Successfully');
 window.location = "finance.php";
 </script>
 <?php
-}?>
+}
+else { if($count > 0 and $count1<0) { ?><script> alert('Refrence id not exist!'); </script> <?php } 
+else if($count < 0 and $count1>0) { ?><script> alert('Voucher ID already exist!'); </script> <?php }
+else { 
+ ?><script> alert('Refrence id not exist!\n Voucher ID already exist!'); </script> <?php
+}}
+}
+?>
 
 <?php include('header.php'); ?>
             <nav>
@@ -82,13 +88,19 @@ window.location = "finance.php";
                                          <div class="form-group">
 							  <label class="col-md-5 control-label">Voucher Amount:</label>
 							  <div class="col-md-3">
-					 <input type="number"  class="form-control" name="vamount" placeholder="Amount" required autofocus>
+					 <input type="number"  class="form-control" name="vamount" placeholder="Amount"  <?php
+if ( $_POST['vamount'] ) {
+print ' value="' . $_POST['vamount'] . '"';
+} ?>required autofocus>
 				</div>
 				</div>
                 <div class="form-group">
 							  <label class="col-md-5 control-label">Voucher Date:</label>
 							  <div class="col-md-3">
-						 <input type="date" name="vdate" id = "date" placeholder="dd/mm/yyyy" class="form-control input-md" max="2050-12-31" min="1947-12-31" required/>
+						 <input type="date" name="vdate" id = "date" placeholder="dd/mm/yyyy" class="form-control input-md" max="2050-12-31" min="1947-12-31" <?php
+if ( $_POST['vdate'] ) {
+print ' value="' . $_POST['vdate'] . '"';
+} ?> required/>
 					</div>
 				</div>
            <div class="form-group">

@@ -53,7 +53,7 @@ $user_query = mysqli_query($con,"SELECT active_time FROM candidate WHERE cand_em
 													$time = $row['active_time'];
 													$timestamp = strtotime('$time') + 60*60*60;
 													$time = date('H:i', $timestamp);
-													if($time > NOW()) {
+													if($time > date("h:i:sa")) {
 
 if (isset($email) && isset($key))
 {
@@ -80,7 +80,7 @@ if (isset($email) && isset($key))
 alert('Activation link is expired');
 window.location = "index.php";
 </script>
-<?php } ?>
+<?php }} ?>
 
 </body>
 </html>
