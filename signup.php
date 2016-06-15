@@ -345,7 +345,8 @@ print ' value="' . $_POST['image'] . '"';
             <div class="form-group">
               <label class="col-md-5 control-label" for="rental">Password:</label>
               <div class="col-md-3">
-                <input type="password" placeholder="Password" id="password" class="form-control input-md" pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$" name="password" <?php
+                <input type="password" placeholder="Password" id="password" class="form-control input-md" pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$" name="password" 
+                title="Password should contain an upper case letter, a lower case letter, a number and a special character. Length should be atleast 8 characters" name="password" <?php
 if ( $_POST['nicimage'] ) {
 print ' value="' . $_POST['nicimage'] . '"';
 } ?> 
