@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 15, 2016 at 12:56 PM
+-- Generation Time: Jun 15, 2016 at 03:51 PM
 -- Server version: 10.1.9-MariaDB
 -- PHP Version: 5.6.15
 
@@ -64,7 +64,7 @@ CREATE TABLE `candidate` (
   `cand_nic_attachment` longblob NOT NULL,
   `cand_profile_pic` longblob NOT NULL,
   `cand_pob` varchar(20) NOT NULL,
-  `cand_organization` varchar(20) NOT NULL,
+  `cand_organization` varchar(60) NOT NULL,
   `isactive` tinyint(1) NOT NULL,
   `isdeleted` tinyint(1) NOT NULL,
   `disabled_by` varchar(60) NOT NULL,
@@ -81,10 +81,10 @@ CREATE TABLE `candidate` (
 --
 
 INSERT INTO `candidate` (`Ref_id`, `cand_id`, `cand_password`, `cand_full_name`, `cand_father_name`, `cand_nic`, `isapprove`, `cand_dob`, `cand_gender`, `cand_contactno`, `cand_email`, `cand_permenant_address`, `cand_current_address`, `cand_nic_attachment`, `cand_profile_pic`, `cand_pob`, `cand_organization`, `isactive`, `isdeleted`, `disabled_by`, `disabled_at`, `modified_by`, `modified_at`, `Activation`, `active_time`, `isapproveby`) VALUES
-('2016PIA0093', 93, '02f87940892a89645473b0b4d11e0b9c', 'Farah Sadiq', 'Sadiq Muhhamad', '42101674381234', 1, '1995-06-15', 'Female', '02134522671', 'farahsadiq357@yahoo.com', 'Malir Halt Baghe rafi karachi', 'Malir Halt Baghe rafi karachi', 0x63312e6a7067, 0x7468756d622d637574652d626f792d77616c6c70617065722d666f722d63656c6c70686f6e652d646f776e6c6f61642d667265652d313139332e6a7067, 'Karachi', 'Pakistan Internation', 1, 0, '', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', '', '00:00:00', 'abc@gmail.com.pk'),
+('2016PIA0093', 93, '02f87940892a89645473b0b4d11e0b9c', 'Farah Sadiq', 'Sadiq Muhhamad', '42101674381234', 1, '1995-06-15', 'Female', '02134522671', 'farahsadiq357@yahoo.com', 'Malir Halt Baghe rafi karachi', 'Malir Halt Baghe rafi karachi', 0x63312e6a7067, 0x7468756d622d637574652d626f792d77616c6c70617065722d666f722d63656c6c70686f6e652d646f776e6c6f61642d667265652d313139332e6a7067, 'Karachi', 'Pakistan International Airlines', 1, 0, '', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', '', '00:00:00', 'abc@gmail.com.pk'),
 ('2016PAF0094', 94, '02f87940892a89645473b0b4d11e0b9c', 'Ayesha ruba Hussain', 'Hussain', '42101674367234', 0, '1994-06-14', 'Female', '02132433671', 'ayesha@forin.com', 'B2-block19 National Complex Gulshan e Iqbal Karachi', 'B2-block19 National Complex Gulshan e Iqbal Karachi', 0x63312e6a7067, 0x7468756d622d637574652d626f792d77616c6c70617065722d666f722d63656c6c70686f6e652d646f776e6c6f61642d667265652d313139332e6a7067, 'karachi', 'Pakistan Air Force', 0, 0, '', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', '', '00:00:00', ''),
 ('2016SHA0099', 99, '02f87940892a89645473b0b4d11e0b9c', 'Bisma Ayaz', 'Ayaz Ahmed', '42101373611234', 1, '1996-06-14', 'Female', '03297834567', 'bisma.ayaz@yahoo.com', 'B2-block19 National Complex Gulshan e Iqbal Karachi', 'B2-block19 National Complex Gulshan e Iqbal Karachi', 0x63312e6a7067, 0x7468756d622d637574652d626f792d77616c6c70617065722d666f722d63656c6c70686f6e652d646f776e6c6f61642d667265652d313139332e6a7067, 'Karachi', 'Shaheen Air Internat', 1, 0, '', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', '', '11:20:48', 'abc@gmail.com.pk'),
-('2016PIA0101', 101, '110a6a26bb90190391c53e9545095d62', 'Muhammad Asif', 'Sadiq Muhhamad', '42501951321753', 1, '1984-02-13', 'Male', '89234932489', 'asif.sadiq@live.com', 'R-1, Street A', 'R-1, Street A', 0x63312e6a7067, 0x63312e6a7067, 'karachi', 'Pakistan Internation', 0, 0, '', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', '39f525f04a4a6818be91454b8c55b30d', '11:23:14', 'abc@gmail.com.pk');
+('2016PIA0101', 101, '110a6a26bb90190391c53e9545095d62', 'Muhammad Asif', 'Sadiq Muhhamad', '42501951321753', 1, '1984-02-13', 'Male', '89234932489', 'asif.sadiq@live.com', 'R-1, Street A', 'R-1, Street A', 0x63312e6a7067, 0x63312e6a7067, 'karachi', 'Pakistan International Airlines', 0, 0, '', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', '39f525f04a4a6818be91454b8c55b30d', '11:23:14', 'abc@gmail.com.pk');
 
 -- --------------------------------------------------------
 
@@ -252,7 +252,8 @@ INSERT INTO `login` (`login_id`, `cand_id`, `login_time`, `logout_time`, `ip_add
 (77, 99, '2016-06-15 12:58:30', '0000-00-00 00:00:00', 'localhost:49287'),
 (78, 99, '2016-06-15 13:14:04', '2016-06-15 13:14:31', 'localhost:49408'),
 (79, 93, '2016-06-15 13:14:40', '0000-00-00 00:00:00', 'localhost:49422'),
-(80, 93, '2016-06-15 15:51:11', '0000-00-00 00:00:00', 'localhost:50206');
+(80, 93, '2016-06-15 15:51:11', '2016-06-15 16:02:54', 'localhost:50206'),
+(81, 93, '2016-06-15 18:48:35', '0000-00-00 00:00:00', 'localhost:51269');
 
 -- --------------------------------------------------------
 
@@ -399,7 +400,8 @@ INSERT INTO `user_transaction` (`transaction_id`, `cand_id`, `enroll_id`, `trans
 (37, 93, 50, '2016-06-15 12:13:44', 'localhost:64799', 0, 2000, 0),
 (43, 93, 0, '2016-06-15 12:40:13', 'localhost:65321', 5000, 0, 5000),
 (48, 93, 54, '2016-06-15 15:53:39', 'localhost:50230', 0, 2000, 3000),
-(49, 93, 55, '2016-06-15 15:54:53', 'localhost:50285', 0, 2000, 1000);
+(49, 93, 55, '2016-06-15 15:54:53', 'localhost:50285', 0, 2000, 1000),
+(50, 93, 0, '2016-06-15 16:38:03', 'localhost:50677', 1000, 0, 2000);
 
 -- --------------------------------------------------------
 
@@ -429,6 +431,7 @@ INSERT INTO `voucher` (`voucher_id`, `voucher_amount`, `Ref_id`, `voucher_attach
 ('346734', 5, '2016PIA0093', 0x63312e6a7067, '2016-06-14', '2016-06-15', 1, 0, '0000-00-00 00:00:00', 0),
 ('43743', 5000, '2016PIA0093', 0x63312e6a7067, '2016-06-15', '2016-06-15', 1, 0, '0000-00-00 00:00:00', 0),
 ('456783', 5000, '2016PIA0093', 0x63312e6a7067, '2016-06-15', '2016-06-15', 1, 0, '0000-00-00 00:00:00', 0),
+('542534', 1000, '2016PIA0093', 0x63312e6a7067, '2016-06-15', '2016-06-15', 1, 0, '0000-00-00 00:00:00', 0),
 ('73637', 5000, '2016PIA0093', 0x63312e6a7067, '2016-06-15', '2016-06-15', 1, 0, '0000-00-00 00:00:00', 0),
 ('7838', 5000, '2016PIA0093', 0x63312e6a7067, '2016-06-15', '2016-06-15', 1, 0, '0000-00-00 00:00:00', 0),
 ('78902', 10000, '2016PIA0093', 0x63312e6a7067, '2016-06-14', '2016-06-15', 1, 0, '0000-00-00 00:00:00', 0),
@@ -565,7 +568,7 @@ ALTER TABLE `exams_shift`
 -- AUTO_INCREMENT for table `login`
 --
 ALTER TABLE `login`
-  MODIFY `login_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=81;
+  MODIFY `login_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=82;
 --
 -- AUTO_INCREMENT for table `module`
 --
@@ -595,7 +598,7 @@ ALTER TABLE `user_shift`
 -- AUTO_INCREMENT for table `user_transaction`
 --
 ALTER TABLE `user_transaction`
-  MODIFY `transaction_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
+  MODIFY `transaction_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

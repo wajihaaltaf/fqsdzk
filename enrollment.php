@@ -181,7 +181,7 @@ window.location.assign("enrollment.php");
 	  $user_query = mysqli_query($con,"select * from candidate where cand_id='$cand_id'")or die(mysqli_error($con));
 													$row = mysqli_fetch_array($user_query);
 											        $candorg= $row['cand_organization'];
-	  if ($candorg=="PIA") 
+	  if ($candorg=="Pakistan International Airlines") 
 			 $fees=500;
 			 else 
 			 $fees=2000; ?>
