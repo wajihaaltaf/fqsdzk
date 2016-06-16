@@ -118,6 +118,7 @@ else {
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -279,7 +280,7 @@ print ' value="' . $_POST['nic'] . '"';
             <div class="form-group">
               <label class="col-md-5 control-label" for="rental">Date of birth:</label>
               <div class="col-md-3">
-                <input type="date" id="birthday" name="dob" size="20" max="2050-12-31" min="1950-12-31" class="form-control input-md" placeholder="dd/mm/yyyy" <?php
+               <input type="text" id="defaultEntry" size="10" name="dob" class="form-control input-md" placeholder="mm/dd/yy" <?php
 if ( $_POST["dob"] ) {
 print ' value="' . $_POST["dob"] . '"';
 } ?>  required/>
@@ -417,4 +418,17 @@ if (datefield.type!="date"){ //if browser doesn't support input type="date", ini
 <script src="js/plugins/morris/morris.min.js"></script>
 <script src="js/plugins/morris/morris-data.js"></script>
 </body>
+
+<head>
+<title>jQuery Date Entry</title>
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script type="text/javascript" src="jquery.plugin.js"></script>
+<script type="text/javascript" src="jquery.dateentry.js"></script>
+<script type="text/javascript">
+$(function () {
+	$('#defaultEntry').dateEntry();
+});
+</script>
+</head>
 </html>
