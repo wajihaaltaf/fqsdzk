@@ -407,8 +407,8 @@ confirm_password.onkeyup = validatePassword;
 <title>jQuery Date Entry</title>
 
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-<script type="text/javascript" src="jquery.plugin.js"></script>
-<script type="text/javascript" src="jquery.dateentry.js"></script>
+<script type="text/javascript" src="js/jquery.plugin.js"></script>
+<script type="text/javascript" src="js/jquery.dateentry.js"></script>
 <script type="text/javascript">
 $(function () {
 	$('#defaultEntry').dateEntry();
