@@ -280,7 +280,7 @@ print ' value="' . $_POST['nic'] . '"';
             <div class="form-group">
               <label class="col-md-5 control-label" for="rental">Date of birth:</label>
               <div class="col-md-3">
-               <input type="text" id="defaultEntry" size="10" name="dob" class="form-control input-md" placeholder="mm/dd/yy" <?php
+               <input type="text" id="defaultEntry" name="dob" class="form-control input-md" placeholder="mm/dd/yyyy" <?php
 if ( $_POST["dob"] ) {
 print ' value="' . $_POST["dob"] . '"';
 } ?>  required/>
@@ -393,22 +393,6 @@ function validatePassword(){
 
 password.onchange = validatePassword;
 confirm_password.onkeyup = validatePassword;
-</script>
-<script type="text/javascript">
-    var datefield=document.createElement("input")
-    datefield.setAttribute("type", "date")
-    if (datefield.type!="date"){ //if browser doesn't support input type="date", load files for jQuery UI Date Picker
-        document.write('<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css" />\n')
-        document.write('<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"><\/script>\n')
-        document.write('<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"><\/script>\n') 
-    }
-</script>
-<script>
-if (datefield.type!="date"){ //if browser doesn't support input type="date", initialize date picker widget:
-    jQuery(function($){ //on document.ready
-        $('#birthday').datepicker();
-    })
-}
 </script>
 <script src="js/jquery-1.11.0.js"></script>
 <!-- Bootstrap Core JavaScript -->
