@@ -29,6 +29,9 @@ header("Content-Disposition: attachment; filename='$mnam'.csv");
 $output = fopen('php://output', 'w');
 
 // output the column headings
+$no= mysqli_query($con,"SELECT exam_id FROM `schedule` WHERE module_id='$module_id' AND category_id='$cid'");
+$no1 = mysqli_fetch_array($no);
+$ab= $no1['exam_id'];
 
 $yes = mysqli_query($con,"SELECT module.module_name , schedule.exam_date  from schedule , module where schedule.module_id=module.module_id and schedule.module_id='$module_id' and schedule.station_id= '$station' ") or die(mysqli_error($con));
 // fetch the datau
@@ -41,11 +44,18 @@ $rows = mysqli_query($con,"SELECT candidate.Ref_id,candidate.cand_full_name,modu
 $total= mysqli_num_rows($rows);
 $count= ceil($total/$shift); $var=0;
 for ($x = 1; $x <= $shift; $x++)
-{
-$abc = mysqli_query($con,"SELECT candidate.Ref_id,candidate.cand_full_name,module.module_name,candidate.cand_nic FROM candidate,module,enrollment WHERE module.module_id=enrollment.module_id and enrollment.module_id='$module_id' and candidate.cand_id=enrollment.cand_id  limit $var,$count") or die(mysqli_error($con));
+{ mysqli_query($con, "INSERT INTO exams_shift ( `exam_id`, `shift_no`) VALUES ('$ab', '$x')")or die(mysql_error());
+ 
+$abc = mysqli_query($con,"SELECT candidate.Ref_id,candidate.cand_id,candidate.cand_full_name,module.module_name,candidate.cand_nic FROM candidate,module,enrollment WHERE module.module_id=enrollment.module_id and enrollment.module_id='$module_id' and candidate.cand_id=enrollment.cand_id  limit $var,$count") or die(mysqli_error($con));
 fputcsv($output, array('shift'.$x));
+$q= mysqli_query($con,"SELECT shift_id FROM `exams_shift` WHERE exam_id= '$ab' AND shift_no= '$x'");
+$a= mysqli_fetch_assoc($q);
+$b= $a['shift_id'];
 while ($row = mysqli_fetch_assoc($abc)){
+$c= $row['cand_id'];
+mysqli_query($con, "INSERT INTO user_shift ( `cand_id`,`shift_id`) VALUES ('$c', '$b')")or die(mysql_error());
  fputcsv($output, $row);
+
 }
 $var=$var+$count;
 }}
