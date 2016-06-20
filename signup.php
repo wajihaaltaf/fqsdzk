@@ -118,6 +118,7 @@ else {
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<link rel="stylesheet" type="text/css" href="css/button.css">
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -256,10 +257,12 @@ print ' value="' . $_POST['organization'] . '"';
               <label class="col-md-5 control-label">Gender:</label>
               <div class="col-md-3">
                  <div class="input-group">
-                  <div id="radioBtn" class="btn-group" required> <a class="btn btn-primary btn-sm Active" data-toggle="gender"
-			data-title="Male">Male</a> <a class="btn btn-primary btn-sm notActive" data-toggle="gender" data-title="Female">Female</a> </div>
-                  <input type="hidden" name="gender" id="gender" required>
-                </div>
+                 <input type="radio" id="radio1" name="gender" value="male" 
+				  <?php if(isset($_POST['gender']) == 'male')  echo ' checked="checked"';?>  checked />
+<label for="radio1">Male</label>
+    <input type="radio" id="radio2" name="gender"value="female" <?php if(isset($_POST['gender']) == 'female')  echo ' checked="checked"';?> />
+      <label for="radio2">Female</label>
+	  </div>
               </div>
             </div>
             <div class="form-group">
@@ -416,3 +419,4 @@ $(function () {
 </script>
 </head>
 </html>
+
