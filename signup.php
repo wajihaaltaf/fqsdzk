@@ -2,7 +2,7 @@
 require_once('config.php');
 ?>
 <?php if (!isset($_POST['register'])){ $_POST['fname']= NULL; $_POST['fathername']= NULL; $_POST['dob']=NULL; $_POST['pob']=NULL; $_POST['organization']= NULL; $_POST['paddress']=NULL; $_POST['caddress']=NULL; 
-$_POST['contact']=NULL; $_POST['image']=NULL; $_POST['nicimage']=NULL; $_POST['nic']=NULL;} ?>
+$_POST['contact']=NULL; $_POST['image']=NULL; $_POST['nicimage']=NULL; $_POST['nic']=NULL;$_POST['email']=NULL;$_POST['refid']=NULL;} ?>
 <?php
 	if (isset($_POST['register'])){
 	$firstname=mysql_real_escape_string($_POST['fname']);
@@ -79,37 +79,37 @@ else {
 													$f = mysqli_query($con,"SELECT cand_contactno from candidate where Ref_id='$refid'")or die(mysqli_error($con));
 													$count3 = mysqli_num_rows($f);
  if( $count>0 AND $count1<=0 AND $count2<=0 and $count3<=0) {
- ?> <script> alert('NIC already exist!'); </script> <?php }
+ ?> <script> alert('NIC already exist!'); </script> <?php $_POST['nic']=NULL;}
  else if($count<=0 AND $count1>0 AND $count2<=0 and $count3<=0) {
- ?> <script> alert('email already exist!'); </script> <?php }
+ ?> <script> alert('email already exist!'); </script> <?php  $_POST['email']=NULL;}
  else if ($count<=0 AND $count1<=0 AND $count2>0 and $count3<=0)
- {?> <script> alert('contact no already exist!'); </script> <?php
+ {?> <script> alert('contact no already exist!'); </script> <?php $_POST['contact']=NULL;
  }
   else if ($count<=0 AND $count1<=0 AND $count2<=0 and $count3>0)
- {?> <script> alert('Refrence id already exist!'); </script> <?php
+ {?> <script> alert('Refrence id already exist!'); </script> <?php  $_POST['refid']=NULL;
  }
  else if( $count>0 AND $count1>0 AND $count2<=0 and $count3<=0) {
- ?> <script> alert('NIC and email already exist!'); </script> <?php }
+ ?> <script> alert('NIC and email already exist!'); </script> <?php  $_POST['email']=NULL; $_POST['nic']=NULL;}
  else if( $count>0 AND $count1<=0 AND $count2>0 and $count3<=0) {
- ?> <script> alert('NIC and contact number already exist!'); </script> <?php }
+ ?> <script> alert('NIC and contact number already exist!'); </script> <?php  $_POST['contact']=NULL; $_POST['nic']=NULL;}
  else if( $count<=0 AND $count1>0 AND $count2>0 and $count3<=0) {
- ?> <script> alert('Email and contact number already exist!'); </script> <?php }
+ ?> <script> alert('Email and contact number already exist!'); </script> <?php  $_POST['email']=NULL; $_POST['contact']=NULL;}
  else if( $count<=0 AND $count1<=0 AND $count2>0 and $count3>0) {
- ?> <script> alert('Refrence_id and contact number already exist!'); </script> <?php }
+ ?> <script> alert('Refrence_id and contact number already exist!'); </script> <?php  $_POST['refid']=NULL; $_POST['contact']=NULL;}
  else if( $count<=0 AND $count1>0 AND $count2<=0 and $count3>0) {
- ?> <script> alert('Refrence_id and Email already exist!'); </script> <?php }
+ ?> <script> alert('Refrence_id and Email already exist!'); </script> <?php  $_POST['email']=NULL; $_POST['refid']=NULL;}
  else if( $count>0 AND $count1<=0 AND $count2<=0 and $count3>0) {
- ?> <script> alert('Refrence_id and NIC already exist!'); </script> <?php }
+ ?> <script> alert('Refrence_id and NIC already exist!'); </script> <?php $_POST['refid']=NULL; $_POST['nic']=NULL; }
  else if( $count>0 AND $count1>0 AND $count2>0 and $count3<=0) {
- ?> <script> alert('NIC,Email and Contact already exist!'); </script> <?php }
+ ?> <script> alert('NIC,Email and Contact already exist!'); </script> <?php  $_POST['contact']=NULL; $_POST['email']=NULL; $_POST['nic']=NULL;}
  else if( $count>0 AND $count1>0 AND $count2<=0 and $count3>0) {
- ?> <script> alert('NIC,Email and Refrence_id already exist!'); </script> <?php }
+ ?> <script> alert('NIC,Email and Refrence_id already exist!'); </script> <?php  $_POST['refid']=NULL; $_POST['email']=NULL; $_POST['nic']=NULL; }
   else if( $count>0 AND $count1<=0 AND $count2>0 and $count3>0) {
- ?> <script> alert('NIC,contactno and Refrence_id already exist!'); </script> <?php }
+ ?> <script> alert('NIC,contactno and Refrence_id already exist!'); </script> <?php  $_POST['contact']=NULL; $_POST['nic']=NULL; $_POST['refid']=NULL;}
   else if( $count<=0 AND $count1>0 AND $count2>0 and $count3>0) {
- ?> <script> alert('Email,contact number and Refrence_id already exist!'); </script> <?php }
+ ?> <script> alert('Email,contact number and Refrence_id already exist!'); </script> <?php  $_POST['refid']=NULL; $_POST['contact']=NULL; $_POST['email']=NULL; }
  else {
- ?> <script> alert('NIC, Email and contact number already exist!'); </script> <?php
+ ?> <script> alert('NIC, Email , contact numberand reference id already exist!'); </script> <?php  $_POST['contact']=NULL; $_POST['email']=NULL; $_POST['refid']=NULL; $_POST['nic']=NULL;
  }
 }
 }
@@ -228,7 +228,10 @@ print ' value="' . $_POST['fathername'] . '"';
             <div class="form-group">
               <label class="col-md-5 control-label">Refrence id(if any):</label>
               <div class="col-md-3">
-                <input type="text" name="refid" id = "refid" class="form-control input-md" pattern="[A-Za-z0-9]{11}" />
+                <input type="text" name="refid" id = "refid" class="form-control input-md" pattern="[A-Za-z0-9]{11}" <?php
+if ( $_POST['refid'] ) {
+print ' value="' . $_POST['refid'] . '"';
+} ?> />
               </div>
             </div>
             <div class="form-group">
@@ -268,7 +271,10 @@ print ' value="' . $_POST['organization'] . '"';
             <div class="form-group">
               <label class="col-md-5 control-label">Email:</label>
               <div class="col-md-3">
-                <input type="text" name="email" id = "email" class="form-control input-md" pattern="[^@]+@[^@]+\.[a-zA-Z]{2,}" title="Incorrect Email"required/>
+                <input type="text" name="email" id = "email" class="form-control input-md" pattern="[^@]+@[^@]+\.[a-zA-Z]{2,}" title="Incorrect Email"  <?php
+if ( $_POST['email'] ) {
+print ' value="' . $_POST['email'] . '"';
+} ?>required/>
               </div>
             </div>
             <div class="form-group">
@@ -320,7 +326,10 @@ print ' value="' . $_POST['caddress'] . '"';
               <label class="col-md-5 control-label" for="rental">Contact No.:</label>
               <div class="col-md-3">
               
-             <input type="text" name="contact" id = "contact" class="form-control input-md" title="input number only"  pattern="[0-9]{11}" title="Numbers Only" required/>
+             <input type="text" name="contact" id = "contact" class="form-control input-md" title="input number only"  pattern="[0-9]{11}" title="Numbers Only" <?php
+if ( $_POST['contact'] ) {
+print ' value="' . $_POST['contact'] . '"';
+} ?> required/>
               </div>
             </div>
             <div class="form-group">
@@ -350,10 +359,7 @@ print ' value="' . $_POST['image'] . '"';
               <label class="col-md-5 control-label" for="rental">Password:</label>
               <div class="col-md-3">
                 <input type="password" placeholder="Password" id="password" class="form-control input-md" pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$" name="password" 
-                title="Password should contain an upper case letter, a lower case letter, a number and a special character. Length should be atleast 8 characters" name="password" <?php
-if ( $_POST['nicimage'] ) {
-print ' value="' . $_POST['nicimage'] . '"';
-} ?> 
+                title="Password should contain an upper case letter, a lower case letter, a number and a special character. Length should be atleast 8 characters" name="password" 
 required>
               </div>
             </div>
@@ -388,7 +394,7 @@ var password = document.getElementById("password")
    
 function validatePassword(){
   if(password.value != confirm_password.value) {
-    confirm_password.setCustomValidity("Passwords Don't Match");
+    confirm_password.setCustomValidity("Password Doesn't Match");
   } else {
     confirm_password.setCustomValidity('');
   }
