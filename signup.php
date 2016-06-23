@@ -22,7 +22,7 @@ $_POST['contact']=NULL; $_POST['image']=NULL; $_POST['nicimage']=NULL; $_POST['n
 	$password = md5(mysql_real_escape_string($_POST['password']));
     $img = mysql_real_escape_string($_POST['image']);
 	$nicimg = mysql_real_escape_string($_POST['nicimage']);
-	echo "INSERT INTO `candidate` (`Ref_id`, `cand_id`, `cand_password`, `cand_full_name`, `cand_father_name`, `cand_nic`, `cand_dob`, `cand_gender`, `cand_contactno`, `cand_email`, `cand_permenant_address`, `cand_current_address`, `cand_nic_attachment`, `cand_profile_pic`,`cand_pob`,`cand_organization`,`isactive`) VALUES ('0', '', '$password', '$firstname', '$fathername', '$NIC', '$bdate', '$gender', '$contact', '$email', '$paddress', '$caddress','$nicimg','$img','$pob','$organization','0')";
+	
 	$f = mysqli_query($con,"SELECT cand_id from candidate where cand_email='$email' or cand_nic='$NIC' or cand_contactno='$contact' or Ref_id='$refid' ")or die(mysqli_error($con));
 													$count = mysqli_num_rows($f);
 													if($count <= 0)
@@ -85,37 +85,53 @@ else {
 													$f = mysqli_query($con,"SELECT cand_contactno from candidate where Ref_id='$refid'")or die(mysqli_error($con));
 													$count3 = mysqli_num_rows($f);
  if( $count>0 AND $count1<=0 AND $count2<=0 and $count3<=0) {
- ?> <script> alert('NIC already exist!'); </script> <?php $_POST['nic']=NULL;}
+ ?> <script> alert('NIC already exist!'); </script> <?php $_POST['nic']=NULL;
+  echo '<div class="errormsgbox">NIC already exist!</div>';}
  else if($count<=0 AND $count1>0 AND $count2<=0 and $count3<=0) {
- ?> <script> alert('email already exist!'); </script> <?php  $_POST['email']=NULL;}
+ ?> <script> alert('email already exist!'); </script> <?php  $_POST['email']=NULL;
+  echo '<div class="errormsgbox">Email already exist!</div>';}
  else if ($count<=0 AND $count1<=0 AND $count2>0 and $count3<=0)
  {?> <script> alert('contact no already exist!'); </script> <?php $_POST['contact']=NULL;
+ echo '<div class="errormsgbox">Contact no already exist!</div>';
  }
   else if ($count<=0 AND $count1<=0 AND $count2<=0 and $count3>0)
  {?> <script> alert('Refrence id already exist!'); </script> <?php  $_POST['refid']=NULL;
+echo '<div class="errormsgbox">Refrence id already exist!</div>';
  }
  else if( $count>0 AND $count1>0 AND $count2<=0 and $count3<=0) {
- ?> <script> alert('NIC and email already exist!'); </script> <?php  $_POST['email']=NULL; $_POST['nic']=NULL;}
+ ?> <script> alert('NIC and email already exist!'); </script> <?php  $_POST['email']=NULL; $_POST['nic']=NULL;
+ echo '<div class="errormsgbox"NIC and email already exist!</div>';}
  else if( $count>0 AND $count1<=0 AND $count2>0 and $count3<=0) {
- ?> <script> alert('NIC and contact number already exist!'); </script> <?php  $_POST['contact']=NULL; $_POST['nic']=NULL;}
+ ?> <script> alert('NIC and contact number already exist!'); </script> <?php  $_POST['contact']=NULL; $_POST['nic']=NULL;
+ echo '<div class="errormsgbox">NIC and contact number already exist!</div>';}
  else if( $count<=0 AND $count1>0 AND $count2>0 and $count3<=0) {
- ?> <script> alert('Email and contact number already exist!'); </script> <?php  $_POST['email']=NULL; $_POST['contact']=NULL;}
+ ?> <script> alert('Email and contact number already exist!'); </script> <?php  $_POST['email']=NULL; $_POST['contact']=NULL;
+ echo '<div class="errormsgbox">Email and contact number already exist!</div>';}
  else if( $count<=0 AND $count1<=0 AND $count2>0 and $count3>0) {
- ?> <script> alert('Refrence_id and contact number already exist!'); </script> <?php  $_POST['refid']=NULL; $_POST['contact']=NULL;}
+ ?> <script> alert('Refrence_id and contact number already exist!'); </script> <?php  $_POST['refid']=NULL; $_POST['contact']=NULL;
+ echo '<div class="errormsgbox">Refrence_id and contact number already exist!</div>';}
  else if( $count<=0 AND $count1>0 AND $count2<=0 and $count3>0) {
- ?> <script> alert('Refrence_id and Email already exist!'); </script> <?php  $_POST['email']=NULL; $_POST['refid']=NULL;}
+ ?> <script> alert('Refrence_id and Email already exist!'); </script> <?php  $_POST['email']=NULL; $_POST['refid']=NULL;
+ echo '<div class="errormsgbox">Refrence_id and Email already exist!</div>';}
  else if( $count>0 AND $count1<=0 AND $count2<=0 and $count3>0) {
- ?> <script> alert('Refrence_id and NIC already exist!'); </script> <?php $_POST['refid']=NULL; $_POST['nic']=NULL; }
+ ?> <script> alert('Refrence_id and NIC already exist!'); </script> <?php $_POST['refid']=NULL; $_POST['nic']=NULL;
+ echo '<div class="errormsgbox">Refrence_id and NIC already exist!</div>'; }
  else if( $count>0 AND $count1>0 AND $count2>0 and $count3<=0) {
- ?> <script> alert('NIC,Email and Contact already exist!'); </script> <?php  $_POST['contact']=NULL; $_POST['email']=NULL; $_POST['nic']=NULL;}
+ ?> <script> alert('NIC,Email and Contact already exist!'); </script> <?php  $_POST['contact']=NULL; $_POST['email']=NULL; $_POST['nic']=NULL;
+ echo '<div class="errormsgbox">NIC,Email and Contact already exist!</div>';}
  else if( $count>0 AND $count1>0 AND $count2<=0 and $count3>0) {
- ?> <script> alert('NIC,Email and Refrence_id already exist!'); </script> <?php  $_POST['refid']=NULL; $_POST['email']=NULL; $_POST['nic']=NULL; }
+ ?> <script> alert('NIC,Email and Refrence_id already exist!'); </script> <?php  $_POST['refid']=NULL; $_POST['email']=NULL; $_POST['nic']=NULL; 
+ echo '<div class="errormsgbox">NIC,Email and Refrence_id already exist!</div>';
+ }
   else if( $count>0 AND $count1<=0 AND $count2>0 and $count3>0) {
- ?> <script> alert('NIC,contactno and Refrence_id already exist!'); </script> <?php  $_POST['contact']=NULL; $_POST['nic']=NULL; $_POST['refid']=NULL;}
+ ?> <script> alert('NIC,contactno and Refrence_id already exist!'); </script> <?php  $_POST['contact']=NULL; $_POST['nic']=NULL; $_POST['refid']=NULL;
+ echo '<div class="errormsgbox">NIC,contactno and Refrence_id already exist!</div>';}
   else if( $count<=0 AND $count1>0 AND $count2>0 and $count3>0) {
- ?> <script> alert('Email,contact number and Refrence_id already exist!'); </script> <?php  $_POST['refid']=NULL; $_POST['contact']=NULL; $_POST['email']=NULL; }
+ ?> <script> alert('Email,contact number and Refrence_id already exist!'); </script> <?php  $_POST['refid']=NULL; $_POST['contact']=NULL; $_POST['email']=NULL; 
+ echo '<div class="errormsgbox">Email,contact number and Refrence_id already exist!</div>';}
  else {
  ?> <script> alert('NIC, Email , contact numberand reference id already exist!'); </script> <?php  $_POST['contact']=NULL; $_POST['email']=NULL; $_POST['refid']=NULL; $_POST['nic']=NULL;
+ echo '<div class="errormsgbox">NIC, Email , contact numberand reference id already exist!<br>You may go to <a href="needhelp.php">Send ActivationLink again</a></div>';
  }
 }
 }
@@ -169,7 +185,7 @@ else {
 	<link href="css/bootstrap.min.css" rel="stylesheet">
 	<link href="css/style.css" rel="stylesheet">
 	<link href="css/alert.css" rel="stylesheet">
-
+<link href="css/error.css" rel="stylesheet">
   <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
   <!--[if lt IE 9]>
     <script src="js/html5shiv.js"></script>
