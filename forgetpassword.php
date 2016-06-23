@@ -41,11 +41,19 @@ function smtpmailer($to, $from, $from_name, $subject, $body) {
 		$email=mysql_real_escape_string($_POST['cand_email']);
 		$option = mysql_real_escape_string($_POST['option']);
 		$activation = md5(uniqid(rand(), true));
-
+if($email == "" || $option == "") {?>
+<script>
+alert('Error occured while sending email');
+window.location.assign("needhelp.php");
+</script>
+<?php exit();}
+else{
 		if($option == "A") {
-		
-
-			$qry=mysqli_query($con,"UPDATE candidate set Activation='$activation',active_time=NOW() where cand_email = '$email'")or die(mysqli_error($con));
+		$f = mysqli_query($con,"SELECT cand_id from candidate where cand_email='$email'")or die(mysqli_error($con));
+													$count = mysqli_num_rows($f);
+													if($count > 0)
+													{
+		$qry=mysqli_query($con,"UPDATE candidate set Activation='$activation',active_time=NOW() where cand_email = '$email'")or die(mysqli_error($con));
             
 				$message = " To Reset Password, please click on this link:\n\n";
                 $message .= WEBSITE_URL . '/PIA/reset.php?email=' . urlencode($email) . "&key=$activation";	
@@ -62,9 +70,18 @@ alert('Message has been sent to your email address');
 window.location = "index.php";
 </script>
 <?php }
+else { ?>
+<script>
+alert('Email doesnot exist');
+window.location = "needhelp.php";
+</script>
+<?php }
+}
 		//end of option A	
 else if($option == "B" or $option == "C"){ 
-
+$f = mysqli_query($con,"SELECT cand_id from candidate where cand_email='$email'")or die(mysqli_error($con));
+													$count = mysqli_num_rows($f);
+													if($count > 0){
 $qry=mysqli_query($con,"UPDATE candidate set Activation='$activation',active_time=NOW() where cand_email = '$email'")or die(mysqli_error($con));
 
 				$message = " To Activate Your Account, please click on this link:\n\n";
@@ -84,8 +101,14 @@ window.location = "index.php";
 </script>
 </div>
 <?php }
-}
- ?> 
+else { ?>
+<script>
+alert('Email doesnot exist');
+window.location = "needhelp.php";
+</script>
+<?php }}
+}}
+ ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
