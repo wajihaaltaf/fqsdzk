@@ -22,11 +22,17 @@ $_POST['contact']=NULL; $_POST['image']=NULL; $_POST['nicimage']=NULL; $_POST['n
 	$password = md5(mysql_real_escape_string($_POST['password']));
     $img = mysql_real_escape_string($_POST['image']);
 	$nicimg = mysql_real_escape_string($_POST['nicimage']);
-	
+	echo "INSERT INTO `candidate` (`Ref_id`, `cand_id`, `cand_password`, `cand_full_name`, `cand_father_name`, `cand_nic`, `cand_dob`, `cand_gender`, `cand_contactno`, `cand_email`, `cand_permenant_address`, `cand_current_address`, `cand_nic_attachment`, `cand_profile_pic`,`cand_pob`,`cand_organization`,`isactive`) VALUES ('0', '', '$password', '$firstname', '$fathername', '$NIC', '$bdate', '$gender', '$contact', '$email', '$paddress', '$caddress','$nicimg','$img','$pob','$organization','0')";
 	$f = mysqli_query($con,"SELECT cand_id from candidate where cand_email='$email' or cand_nic='$NIC' or cand_contactno='$contact' or Ref_id='$refid' ")or die(mysqli_error($con));
 													$count = mysqli_num_rows($f);
 													if($count <= 0)
 													{
+													if($firstname=="" || $fathername=="" || $email=="" || $nicimg=="" || $img=="" || $password=="" || $contact == "" || $caddress == "" || $paddress=="" || $organization == "" || $pob == "" || $bdate== "" || $gender == "" || $NIC=="") 
+													{?><script>
+alert('Some Error Occured While Signing UP!');
+window.location = "signup.php";
+</script> <?php exit(); }
+													else {
 	$checking=mysqli_query($con,"INSERT INTO `candidate` (`Ref_id`, `cand_id`, `cand_password`, `cand_full_name`, `cand_father_name`, `cand_nic`, `cand_dob`, `cand_gender`, `cand_contactno`, `cand_email`, `cand_permenant_address`, `cand_current_address`, `cand_nic_attachment`, `cand_profile_pic`,`cand_pob`,`cand_organization`,`isactive`) VALUES ('0', '', '$password', '$firstname', '$fathername', '$NIC', '$bdate', '$gender', '$contact', '$email', '$paddress', '$caddress','$nicimg','$img','$pob','$organization','0')")or die(mysqli_error($con));
 	if($checking)
 	{
@@ -68,7 +74,7 @@ window.location = "index.php";
 alert('Your Account will be activated after admin approval.You will get confirmation email soon');
 window.location = "index.php";
 </script>
-<?php }}
+<?php }}}
 else {
    $f = mysqli_query($con,"SELECT cand_id from candidate where  cand_nic='$NIC'  ")or die(mysqli_error($con));
 													$count = mysqli_num_rows($f);
@@ -260,10 +266,10 @@ print ' value="' . $_POST['organization'] . '"';
               <label class="col-md-5 control-label">Gender:</label>
               <div class="col-md-3">
                  <div class="input-group">
-                 <input type="radio" id="radio1" name="gender" value="male" 
-				  <?php if(isset($_POST['gender']) == 'male')  echo ' checked="checked"';?>  checked />
+                 <input type="radio" id="radio1" name="gender" value="Male" 
+				  <?php if(isset($_POST['gender']) == 'Male')  echo ' checked="checked"';?>  checked />
 <label for="radio1">Male</label>
-    <input type="radio" id="radio2" name="gender"value="female" <?php if(isset($_POST['gender']) == 'female')  echo ' checked="checked"';?> />
+    <input type="radio" id="radio2" name="gender"value="Female" <?php if(isset($_POST['gender']) == 'Female')  echo ' checked="checked"';?> />
       <label for="radio2">Female</label>
 	  </div>
               </div>
@@ -425,4 +431,3 @@ $(function () {
 </script>
 </head>
 </html>
-
