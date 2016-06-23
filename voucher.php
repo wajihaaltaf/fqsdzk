@@ -14,6 +14,13 @@ if (!isset($_POST['update'])){ $_POST['vdate']=NULL; $_POST['vamount']=NULL;} ?>
 	$vimage= mysql_real_escape_string($_POST['vimage']);
 	$id= mysql_real_escape_string($_POST['ref_id']);
 	$adminid= mysql_real_escape_string($_SESSION['id']);
+	if($vdate=="" || $vamount=="" || $vid=="" || $vimage=="" || $adminid==""){
+	?><script>
+alert('Error Occured while submitting Voucher');
+window.location = "voucher.php";
+</script>
+<?php exit(); }
+	else {
 	$user_query = mysqli_query($con,"select * from voucher where voucher_id='$vid'")or die(mysqli_error($con));
 	$count=mysqli_num_rows($user_query);
 	$user_query = mysqli_query($con,"select cand_id from candidate where ref_id='$id'")or die(mysqli_error($con));
@@ -55,7 +62,7 @@ else if($count < 0 and $count1>0) { ?><script> alert('Voucher ID already exist!'
 else { 
  ?><script> alert('Refrence id not exist!\n Voucher ID already exist!'); </script> <?php
 }}
-}
+}}
 ?>
 
 <?php include('header.php'); ?>

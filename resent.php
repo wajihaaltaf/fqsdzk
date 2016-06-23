@@ -2,6 +2,11 @@
 require_once('config.php');
 $msg="";
 $email= $_GET['email'];
+if($email == "") { ?><script>
+alert("Email not sent");
+		window.location = 'index.php'
+		</script><?php exit(); }
+else {
 	$activation = md5(uniqid(rand(), true));
  $qry=mysqli_query($con,"UPDATE `candidate` SET `Activation` = '$activation' WHERE `candidate`.`cand_email` = '$email' ")or die(mysqli_error($con));
 		if($qry)
@@ -71,6 +76,9 @@ inconvenience.</div>';
 
  // End of the main Submit conditional.
 
-
-
+else{?><script>
+alert("Email not sent");
+		window.location = 'index.php';
+		</script><?php exit(); }
+		}
 ?>

@@ -24,9 +24,7 @@ $cand_id=$_GET['id'];
 													$ref_id = $row['Ref_id'];
 													$activation = $row['Activation'];
 													}
-	if (isset($_POST['approve'])){
-		
-}
+	
  ?>
 <?php include('headeradmin.php'); ?>
  <nav>

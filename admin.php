@@ -5,10 +5,25 @@ require_once('config.php');
 require_once('session2.php');
 ?>
 <?php include('headeradmin.php'); ?>
-			<nav>
+			
 				
-                <center><h2>Home<h2></center>
-				
+  <nav>
+   <div id="page-wrapper" class="page-wrapper-cls">
+            <div id="page-inner">
+                <div class="row">
+             
+      <div class="row">
+    <div class='col-md-offset-2 col-md-8 text-center'>
+    <h2><i class="fa fa-users">&nbsp; DASHBOARD</i></h2>
+    </div>
+    
+  </div>
+  <br>
+  <br>
+    <div id="piechart1" style="width: 50%; height: 300px; float:left"></div>
+     <div id="piechart2" style="width: 50%; height: 300px; float:left"></div>
+      <div id="piechart3" style="width: 50%; height: 300px; float:left"></div>
+    </nav>
 	</nav>
     <!-- /#wrapper -->
 

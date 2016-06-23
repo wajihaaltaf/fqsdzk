@@ -5,6 +5,15 @@ require_once('session2.php');
 ?>
 <?php
 	if (isset($_POST['register'])){
+	if($catagory="" || $module="" || $station = "" || $edate="" || $ddate = "" )
+	{
+	?>
+<script>
+alert('Schedule has been added');
+window.location = "schedule.php";
+</script>
+<?php exit();} 
+	else {
 	$category=mysql_real_escape_string($_POST['category']);
 	$module=mysql_real_escape_string($_POST['module']);
 	$station=mysql_real_escape_string($_POST['station']);
@@ -34,7 +43,7 @@ window.location = "schedule.php";
 		}
         <?php
 		mysqli_close($con);
-		}}
+		}}}
 		?>
       
 			

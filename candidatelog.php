@@ -11,8 +11,8 @@ header('Content-Disposition: attachment; filename=candidate.csv');
 $output = fopen('php://output', 'w');
 
 // output the column headings
-fputcsv($output, array('Ref_id', 'Name', 'Email','NIC'));
-$rows = mysqli_query($con,"SELECT candidate.Ref_id,candidate.cand_full_name,candidate.cand_email,candidate.cand_nic FROM candidate where isapprove=1 and isactive=1");
+fputcsv($output, array('Ref_id', 'Name', 'Email','NIC','Active'));
+$rows = mysqli_query($con,"SELECT candidate.Ref_id,candidate.cand_full_name,candidate.cand_email,candidate.cand_nic,candidate.isactive FROM candidate where isapprove=1");
 while ($row = mysqli_fetch_assoc($rows))
 {
  fputcsv($output, $row);
@@ -32,7 +32,8 @@ exit();
 				<tr class="head">
 				<th>Username</th>
                 <th>Email</th>
-				<th>Link</th>
+                <th>Active</th>
+				<th>Candidate Detail</th>
 				</tr>
 				 <script>
 				$(function() {
@@ -51,7 +52,8 @@ exit();
 						<tr class="edit_tr">
 						<td><?php echo $rec['cand_full_name']; ?></td>
 						<td><?php echo $rec['cand_email'] ?></td>
-                        <td><a href="candinfo.php <?php echo '?id='.$id; ?> ">Candidate detail</a></td>
+                        <td><?php if($rec['isactive']==1) echo "&#10004"; else echo "&#x2716"; ?></td>
+                        <td><a href="candinfo.php<?php echo '?id='.$id; ?> ">Candidate detail</a></td>
 						</tr><?php }?>
 							</table>
 							</div>

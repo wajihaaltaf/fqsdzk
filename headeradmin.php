@@ -63,7 +63,71 @@
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->	 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+      function drawChart() {
 
+        var data = google.visualization.arrayToDataTable([
+          ['Gender', 'fd'],
+<?php 
+$select="SELECT COUNT(*) as COUNTING,cand_gender FROM candidate GROUP by candidate.cand_gender ";
+		$qry=mysqli_query($con,$select);
+		while($rec = mysqli_fetch_array($qry)){
+		$uname = "$rec[COUNTING]";
+		$gender = "$rec[cand_gender]";
+		?>
+          ['<?php echo $gender; ?>',    <?php echo $uname; ?>],
+<?php } ?>
+        ]);
+        var options = {
+          title: 'Male to Female Candidate'
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('piechart1'));
+
+        chart.draw(data, options);
+	  var data = google.visualization.arrayToDataTable([
+          ['Position', 'fd'],
+<?php 
+$select = "SELECT DATE_FORMAT(NOW(), '%Y') - DATE_FORMAT(cand_dob, '%Y') - (DATE_FORMAT(NOW(), '00-%m-%d') < DATE_FORMAT(cand_dob, '00-%m-%d')) AS age FROM candidate group by age";
+			
+	$qry=mysqli_query($con,$select);
+		while($rec = mysqli_fetch_array($qry)){
+		$uname = "$rec[age]";
+		?>
+          ['<?php echo $uname; ?>',    <?php echo $uname; ?>],
+<?php } ?>
+        ]);
+        var options = {
+          title: 'Candidate by Age'
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('piechart3'));
+
+        chart.draw(data, options);
+		var data = google.visualization.arrayToDataTable([
+          ['Department', 'fd'],
+<?php 
+$select = "SELECT count(candidate.cand_id) as COUNTING, candidate.cand_organization FROM candidate group by candidate.cand_organization  ";
+			//$result = mysql_fetch_array(mysql_query($select));
+	$qry=mysqli_query($con,$select);
+		while($rec = mysqli_fetch_array($qry)){
+		$uname = "$rec[COUNTING]";
+		$gender = "$rec[cand_organization]";
+		?>
+          ['<?php echo $gender; ?>',    <?php echo $uname; ?>],
+<?php } ?>
+        ]);
+        var options = {
+          title: 'Candidate by Organization'
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('piechart2'));
+
+        chart.draw(data, options); }
+    </script>
 
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->

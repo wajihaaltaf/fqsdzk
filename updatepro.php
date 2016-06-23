@@ -7,7 +7,10 @@ require_once('session2.php');
 ?>
 
 <?php
-$cand_id=$_GET['id'];
+if(isset($_GET['id']))
+{$cand_id=$_GET['id'];
+$_SESSION['candidate_id']=$cand_id;}
+$cand_id=$_SESSION['candidate_id'];
 	$user_query = mysqli_query($con,"select * from candidate where cand_id=$cand_id")or die(mysqli_error($con));
 													while($row = mysqli_fetch_array($user_query)){
 													$candname = $row['cand_full_name'];
@@ -25,23 +28,26 @@ $cand_id=$_GET['id'];
 													$image = $row['cand_profile_pic'];
 													}
 	if (isset($_POST['update'])){
-		if (($_POST['cand_full_name'] == '')or($_POST['cand_father_name'] == '' )  or ($_POST['cand_dob'] == '')  or ($_POST['cand_nic'] == '') or ($_POST['password'] == '') or ($_POST['cand_gender'] == '') or  ($_POST['cand_permenant_address'] == '') or ($_POST['cand_current_address'] == '') or ($_POST['cand_email'] == '') )
+		if (($_POST['cand_full_name'] == '')or($_POST['cand_father_name'] == '' )  or ($_POST['cand_dob'] == '')  or ($_POST['cand_nic'] == '') or ($_POST['password'] == '')or  ($_POST['cand_permenant_address'] == '') or ($_POST['cand_current_address'] == '') or ($_POST['cand_email'] == '') )
 			{
-			echo "You Must Fill All";
+			?> <script>
+alert('Error Occured while updating');
+window.location = "updatepro.php";
+</script>
+			<?php
+			exit();
 			}
 	else{ 
 		$firstname = addslashes("$_POST[cand_full_name]");
-		//$lastname = addslashes("$_POST[cand_last_name]");
-		$fathername = addslashes("$_POST[cand_father_name]");
+	    $fathername = addslashes("$_POST[cand_father_name]");
 		$dob = addslashes("$_POST[cand_dob]");
 		$nic = addslashes("$_POST[cand_nic]");
 		$passw = md5(addslashes("$_POST[password]"));
-		$gender = addslashes("$_POST[cand_gender]");
 		$candpermaddress = addslashes("$_POST[cand_permenant_address]");
 		$candcuraddress = addslashes("$_POST[cand_current_address]");
 		$email= addslashes("$_POST[cand_email]");
 		$candcontact = addslashes("$_POST[cand_contactno]");
-		if($password = $passw) {
+		if($password == $passw) {
 		$checking=mysqli_query($con,"UPDATE candidate SET cand_full_name ='$firstname',cand_father_name ='$fathername', cand_dob ='$dob', cand_nic = '$nic',cand_email ='$email',cand_permenant_address='$candpermaddress',cand_current_address='$candcuraddress', modified_by= '$cand_id',modified_at = NOW(),cand_contactno = '$candcontact' WHERE cand_id = '$cand_id'")or die(mysqli_error($con)); 
 		if($checking) { mysqli_commit($con);
 		mysqli_close($con);
@@ -94,22 +100,7 @@ window.location = "updatepro.php";
 					<input type="text" name="cand_father_name" id = "fname" class="form-control input-md" placeholder="please enter first name" pattern="[A-Za-z. ]{1,50}" value= "<?php echo $candfname; ?>" required/> 
 					</div>
 					</div>
-                    <div>
-				
-				<div>
-					<div class="form-group">
-							  <label class="col-md-5 control-label">Gender:</label>
-							  <div class="col-md-3">
-					<div class="input-group">
-    			<div id="radioBtn" class="btn-group">
-					<a class="btn btn-primary btn-sm notActive" data-toggle="gender" data-title="Male">Male</a>
-    				<a class="btn btn-primary btn-sm notActive" data-toggle="gender" data-title="Female">Female</a>
-    			</div>
-    				<input type="hidden" name="cand_gender" id="gender" value ="<?php echo $gender; ?>" required>
-    			</div>
-				</div>
-				</div>
-               				      
+                      
                 <div class="form-group">
 							  <label class="col-md-5 control-label">Email:</label>
 							  <div class="col-md-3">
@@ -125,13 +116,13 @@ window.location = "updatepro.php";
 				<div class="form-group">
 							  <label class="col-md-5 control-label" for="rental">Date of birth:</label>
 							  <div class="col-md-3">
-						<input type="date" name="cand_dob" id = "bdate" title="click to choose a date" class="form-control input-md" placeholder="1900-1-31" value = <?php echo $canddob; ?> />
+						<input type="date" name="cand_dob" id = "bdate" title="click to choose a date" class="form-control input-md" placeholder="1900-1-31" value = <?php echo $canddob; ?> required/>
 					</div>
 				</div>
                 <div class="form-group">
 							  <label class="col-md-5 control-label">Place of birth:</label>
 							  <div class="col-md-3">
-					<input type="date" name="cand_pob" id = "bdate" title="click to choose a date" class="form-control input-md" placeholder="1900-1-31" value = <?php echo $candpob; ?> /> 
+					<input type="date" name="cand_pob" id = "bdate" title="click to choose a date" class="form-control input-md" placeholder="1900-1-31" value = <?php echo $candpob; ?> required/>
 					</div>
 					</div>
 				<div class="form-group">
