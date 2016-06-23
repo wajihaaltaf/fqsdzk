@@ -26,6 +26,10 @@ window.location = "index.php";
 </script>
 <?php exit(); }
 else {
+$user_query = mysqli_query($con,"SELECT `Activation` FROM candidate WHERE candidate.cand_email= '$email' ")or die(mysqli_error($con));
+													$row = mysqli_fetch_array($user_query);
+													$activation = $row['Activation'];
+													if($activation == $key) {
   $result = mysqli_query($con,"UPDATE candidate SET Activation=NULL,cand_password = '$npassword' WHERE cand_email ='$email'") or die(mysqli_error($con));
 
     // Print a customized message:
@@ -38,6 +42,12 @@ else {
         echo '<div class="errormsgbox">Oops !Your account could not be activated. Please recheck the link or contact the system administrator.</div>';
 
     }
+	}else {?>
+<script>
+alert('Activation link is expired');
+window.location = "index.php";
+</script>
+<?php } 
 	}}}
 	else { 
 ?>
