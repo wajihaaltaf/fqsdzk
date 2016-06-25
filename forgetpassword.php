@@ -172,7 +172,7 @@ window.location = "needhelp.php";
   </h3>
   <p>
     <center>
-      We can help you reset your password and security info. First, enter your account and follow the instructions below.
+      First, enter your account and follow the instructions below.
     </center>
   </p>
   <br>
