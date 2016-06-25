@@ -56,7 +56,7 @@
 <form class="form-horizontal" role="form" method="post" action="forgetpassword.php">
   <h3>
     <center>
-      Why can't you sign in?
+     Having trouble signing in?
     </center>
   </h3>
   <br>

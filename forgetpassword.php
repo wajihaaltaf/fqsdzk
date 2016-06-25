@@ -172,7 +172,7 @@ window.location = "needhelp.php";
   </h3>
   <p>
     <center>
-      First, enter your account and follow the instructions below.
+      Enter your email address
     </center>
   </p>
   <br>
