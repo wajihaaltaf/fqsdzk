@@ -40,7 +40,7 @@ window.location = "loc.php";
 else {
 ?>
 <script>
-alert('Password doesnot match with Each Other');
+alert('Passwords doesnot match');
 window.location = "changepassword.php";
 </script>
 <?php
@@ -48,7 +48,7 @@ window.location = "changepassword.php";
 else { 
 ?>
 <script>
-alert('Password doesnot match Current Password');
+alert('Current password is incorrect');
 window.location = "changepassword.php";
 </script>
 <?php 
