@@ -20,7 +20,7 @@ session_start();
     $email = clean($_POST['email']);
     $password = clean(md5($_POST['password']));
 //Create query
-$qry="SELECT * from `candidate` WHERE (cand_email = '$email' or Ref_id='$email') and cand_password = '$password' and isapprove = 1 and isactive =1";
+$qry="SELECT * from `candidate` WHERE (cand_email = '$email' or Ref_id='$email' ) and cand_password = '$password' and isapprove = 1 and isactive =1";
 	$result=mysqli_query($con,$qry);
 	$qry1="SELECT * from `administration` WHERE admin_email = '$email' and admin_password = '$password'";
 	$row=mysqli_query($con,$qry1);
@@ -75,7 +75,7 @@ while($rec = mysqli_fetch_array($qry)){
 			}
 		if($s==0 && $r==0) {
 		
-		$user_query = mysqli_query($con,"select isactive from candidate where cand_email = '$email'")or die(mysql_ereror());
+		$user_query = mysqli_query($con,"select isactive from candidate where (cand_email = '$email' or Ref_id='$email' )")or die(mysql_ereror());
 													while($row = mysqli_fetch_array($user_query)){
 													$isactive = $row['isactive'];
 													}

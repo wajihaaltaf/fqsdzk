@@ -49,11 +49,9 @@
 <br>
 <br>
 <div class="col-lg-12 col-md-12 col-sm-12" />
-
-
 <form action="login.php" class="form-signin" method="post" role="form">
 <div class="form-group">
-  <input type="text" class="form-control input-md" name="email" id="email" placeholder="Email or Refrence id" required autofocus>
+  <input type="text" class="form-control input-md" name="email" id="email" placeholder="Email or Reference id" required autofocus>
 </div>
 <div class="form-group">
   <input type="password" class="form-control input-md" name="password" id="password" placeholder="Password" required>
