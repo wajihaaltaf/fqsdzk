@@ -359,10 +359,9 @@ print ' value="' . $_POST['contact'] . '"';
               <div class="col-md-3">
                 <li class="two">
                   <div class="left_nor">
-                    <input type="file" id="logo1" onChange="Checkfiles()" multiple accept='image/*' name="image" tabindex="20" value="<?php if($_POST["txtLogoFileName"]) echo $_POST["txtLogoFileName"]; else echo($LogofileName); ?>" <?php
-if ( $_POST['image'] ) {
-print ' value="' . $_POST['image'] . '"';
-} ?> required/>
+                    <input type="file" id="logo1" onChange="Checkfiles()" multiple accept='image/*' name="image" tabindex="20" 
+                    value="<?php // if($_POST["txtLogoFileName"]) echo $_POST["txtLogoFileName"]; else echo($LogofileName); ?>" 
+                    <?php // if ( $_POST['image'] ) { print ' value="' . $_POST['image'] . '"';} ?> required/>
                   </div>
                 </li>
               </div>
@@ -372,7 +371,8 @@ print ' value="' . $_POST['image'] . '"';
               <div class="col-md-3">
                 <li class="two">
                   <div class="left_nor">
-                    <input type="file" id="logo1" onChange="Checkfiles()" multiple accept='image/*' name="nicimage" tabindex="20" value="<?php if($_POST["txtLogoFileName"]) echo $_POST["txtLogoFileName"]; else echo($LogofileName); ?>" required/>
+                    <input type="file" id="logo1" onChange="Checkfiles()" multiple accept='image/*' name="nicimage" tabindex="20" 
+                    value="<?php // if($_POST["txtLogoFileName"]) echo $_POST["txtLogoFileName"]; else echo($LogofileName); ?>" required/>
                   </div>
                 </li>
               </div>
