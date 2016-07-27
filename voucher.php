@@ -113,7 +113,8 @@ print ' value="' . $_POST['vdate'] . '"';
            <div class="form-group">
 							  <label class="col-md-5 control-label">Voucher Image:</label>
 							  <div class="col-md-3">
-						 <div class="left_nor"><input type="file" id="logo1" onChange="Checkfiles()" multiple accept='image/*' name="vimage" tabindex="20" value="<?php if($_POST["txtLogoFileName"]) echo $_POST["txtLogoFileName"]; else echo($LogofileName); ?>" /></div> </li>
+						 <div class="left_nor"><input type="file" id="logo1" onChange="Checkfiles()" multiple accept='image/*' name="vimage" tabindex="20" 
+						 value="<?php // if($_POST["txtLogoFileName"]) echo $_POST["txtLogoFileName"]; else echo($LogofileName); ?>" /></div> </li>
 					</div>
 				</div>  
                 <div class="control-group">
