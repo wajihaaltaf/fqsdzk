@@ -3,9 +3,9 @@ require_once('config.php');
 
 require_once 'PHPMailer/PHPMailerAutoload.php';
 
-define('GUSER', 'bisma@ayazahmed.com'); // GMail username
-define('GPWD', 'Bisma2015'); // GMail password
-DEFINE('WEBSITE_URL', 'http://localhost');
+//define('GUSER', 'bisma@ayazahmed.com'); // GMail username
+//define('GPWD', 'Bisma2015'); // GMail password
+//DEFINE('WEBSITE_URL', 'http://localhost');
 
 
 function smtpmailer($to, $from, $from_name, $subject, $body) { 
@@ -121,7 +121,7 @@ $qry=mysqli_query($con,"INSERT INTO `user_transaction` (`transaction_id`, `cand_
  mysqli_commit($con);
  $message = "You are successfully enrolled in category :".$category." module:".$mod;
                $candemail = $_SESSION['email'];
-if (smtpmailer($candemail, 'techrisersnedcis@gmail.com', 'PIA| Enrollment Confirmation', 'Enrollment Confirmation', $message)) {
+if (smtpmailer($candemail, 'ptc.exam@gmail.com', 'PIA| Enrollment Confirmation', 'Enrollment Confirmation', $message)) {
 	// Finish the page:
                 $msg='<div class="success">A confirmation email
 has been sent to '.$candemail.'  </div>';

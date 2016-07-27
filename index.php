@@ -123,6 +123,7 @@
     <?php
             $date = new DateTime();
             echo $date->format('l, F jS, Y');
+            // techrisersnedcis@gmail.com
           ?>
     <h4>
   </div>
@@ -145,3 +146,4 @@
 <script src="assets/js/custom.js"></script>
 </body>
 </html>
+

@@ -17,8 +17,8 @@ else {
 				
 require_once 'PHPMailer/PHPMailerAutoload.php';
 
-define('GUSER', 'bisma@ayazahmed.com'); // GMail username
-define('GPWD', 'Bisma2015'); // GMail password
+//define('GUSER', 'bisma@ayazahmed.com'); // GMail username
+//define('GPWD', 'Bisma2015'); // GMail password
 
 
 
@@ -56,7 +56,7 @@ header("location: resent.php?email=$email"); ?>
 
 //smtpmailer('aalogic@gmail.com', 'from@mail.com', 'yourName', 'test mail message', 'Hello World!');
 	
-if (smtpmailer($email, 'techrisersnedcis@gmail.com', 'PIA| Signin', 'Registration Confirmation', $message)) {
+if (smtpmailer($email, 'ptc.exam@gmail.com', 'PIA| Signin', 'Registration Confirmation', $message)) {
 	// Finish the page:
                 $msg='<div class="success">Thank you for
 registering! A confirmation email

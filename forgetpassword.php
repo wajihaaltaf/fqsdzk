@@ -2,9 +2,9 @@
 require_once('config.php');
 require_once 'PHPMailer/PHPMailerAutoload.php';
 
-define('GUSER', 'bisma@ayazahmed.com'); // GMail username
-define('GPWD', 'Bisma2015'); // GMail password
-DEFINE('WEBSITE_URL', 'http://localhost');
+//define('GUSER', 'bisma@ayazahmed.com'); // GMail username
+//define('GPWD', 'Bisma2015'); // GMail password
+//DEFINE('WEBSITE_URL', 'http://localhost');
 
 
 function smtpmailer($to, $from, $from_name, $subject, $body) { 
@@ -59,7 +59,7 @@ else{
                 $message .= WEBSITE_URL . '/PIA/reset.php?email=' . urlencode($email) . "&key=$activation";	
 		
 
-if (smtpmailer($email, 'techrisersnedcis@gmail.com', 'PIA| Reset Password', 'Registration Confirmation', $message)) {
+if (smtpmailer($email, 'ptc.exam@gmail.com', 'PIA| Reset Password', 'Registration Confirmation', $message)) {
 	// Finish the page:
      $msg='<div class="success">! Reset Password email has been sent to '.$email.' Please click on the Link to Reset Your Password </div>';	
 }
@@ -88,7 +88,7 @@ $qry=mysqli_query($con,"UPDATE candidate set Activation='$activation',active_tim
                 $message .= WEBSITE_URL . '/PIA/activate.php?email=' . urlencode($email) . "&key=$activation";
 
 	
-if (smtpmailer($email, 'techrisersnedcis@gmail.com', 'PIA| Account Activation', 'Registration Confirmation', $message)) {
+if (smtpmailer($email, 'ptc.exam@gmail.com', 'PIA| Account Activation', 'Registration Confirmation', $message)) {
 	// Finish the page:
                 $msg='<div class="success">! Activation email
 has been sent to '.$email.' Please click on the Link to Reset Your Password </div>';	

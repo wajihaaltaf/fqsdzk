@@ -3,9 +3,9 @@ require_once('config.php');
 
 require_once 'PHPMailer/PHPMailerAutoload.php';
 
-define('GUSER', 'bisma@ayazahmed.com'); // GMail username
-define('GPWD', 'Bisma2015'); // GMail password
-DEFINE('WEBSITE_URL', 'http://localhost');
+//define('GUSER', 'bisma@ayazahmed.com'); // GMail username
+//define('GPWD', 'Bisma2015'); // GMail password
+//DEFINE('WEBSITE_URL', 'http://localhost');
 
 
 function smtpmailer($to, $from, $from_name, $subject, $body) { 
@@ -69,7 +69,7 @@ $admin_email = $_SESSION['email'];
 		$message = "Your Account is approved To activate your account, please click on this link:\n\n";
                 $message .= WEBSITE_URL . '/PIA/activates.php?email=' . urlencode($candemail) . "&key=$activation";
 
-if (smtpmailer($candemail, 'techrisersnedcis@gmail.com', 'PIA| Signin', 'Registration Confirmation', $message)) {
+if (smtpmailer($candemail, 'ptc.exam@gmail.com', 'PIA| Signin', 'Registration Confirmation', $message)) {
 	// Finish the page:
                 $msg='<div class="success">Thank you for
 registering! A confirmation email
