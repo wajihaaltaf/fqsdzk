@@ -45,3 +45,9 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+.buildpath
+.project
+.settings/org.eclipse.php.core.prefs
+.settings/org.eclipse.php.debug.core.Debug_Process_Preferences.prefs
+config
+config.php
