@@ -222,7 +222,7 @@ var optionsList = {
         
 								<?php 
 								
-						$user_query = mysqli_query($con,"SELECT module.module_name,DATE_FORMAT( schedule.exam_date, '%d-%m-%Y' ) as exam_date,station.station_name FROM module,schedule,station WHERE schedule.module_id=module.module_id AND module.category_id=1 and schedule.exam_deadline > NOW() and schedule.station_id=station.station_id ")or die(mysqli_error($con));
+						$user_query = mysqli_query($con,"SELECT module.module_name,DATE_FORMAT( schedule.exam_date, '%d-%m-%Y' ) as exam_date,station.station_name FROM module,schedule,station,exam_station WHERE schedule.module_id=module.module_id AND module.category_id=1 and schedule.exam_deadline > NOW() and schedule.exam_id=exam_station.exam_id and exam_station.station_id=station.station_id ")or die(mysqli_error($con));
 													while($row = mysqli_fetch_array($user_query)){
 													$module_name = $row['module_name'];
 													$module_edate = $row['exam_date'];
@@ -237,7 +237,7 @@ var optionsList = {
 					
 								<?php 
 								
-					$user_query = mysqli_query($con,"SELECT module.module_name,DATE_FORMAT( schedule.exam_date, '%d-%m-%Y' ) as exam_date,station.station_name FROM module,schedule,station WHERE schedule.module_id=module.module_id AND module.category_id=2 and schedule.exam_deadline > NOW() and schedule.station_id=station.station_id ")or die(mysqli_error($con));
+					$user_query = mysqli_query($con,"SELECT module.module_name,DATE_FORMAT( schedule.exam_date, '%d-%m-%Y' ) as exam_date,station.station_name FROM module,schedule,station,exam_station WHERE schedule.module_id=module.module_id AND module.category_id=2 and schedule.exam_deadline > NOW() and schedule.exam_id=exam_station.exam_id and exam_station.station_id=station.station_id ")or die(mysqli_error($con));
 													while($row = mysqli_fetch_array($user_query)){
 													$module_name = $row['module_name'];
 													$module_edate = $row['exam_date'];

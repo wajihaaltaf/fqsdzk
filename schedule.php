@@ -16,7 +16,8 @@ window.location = "schedule.php";
 	else {
 	$category=mysql_real_escape_string($_POST['category']);
 	$module=mysql_real_escape_string($_POST['module']);
-	$station=mysql_real_escape_string($_POST['station']);
+	//$station=mysql_real_escape_string($_POST['station']);
+  //$stations=mysql_real_escape_string($)
 	$edate=mysql_real_escape_string($_POST['edate']);
 	$ddate=mysql_real_escape_string($_POST['ddate']);
 	$user_query = mysqli_query($con,"SELECT module.module_id,category.category_id FROM module,category WHERE module.category_id=category.category_id AND category.category_name='$category' AND module.module_name='$module'")or die(mysqli_error($con));
@@ -24,10 +25,39 @@ window.location = "schedule.php";
 													{$mid = $row['module_id'];
 													$cid= $row['category_id'];
 													}				
-	$qry=mysqli_query($con,"INSERT INTO `schedule` (`exam_date`, `module_id`, `category_id`,`station_id`, `exam_id`, `exam_deadline`) VALUES ('$edate','$mid','$cid', '$station', '', '$ddate')")or die(mysqli_error($con));
-		if($qry)
-		{ mysqli_commit($con);
-              
+	   if(!empty($_POST['station_list']))
+  {
+    $qry=mysqli_query($con,"INSERT INTO `schedule` (`exam_date`, `module_id`, `category_id`, `exam_id`, `exam_deadline`) VALUES ('$edate','$mid','$cid', '', '$ddate')")or die(mysqli_error($con));
+    if($qry)
+    { 
+      $result1=mysqli_query($con,"SELECT schedule.exam_id FROM schedule WHERE schedule.exam_id=(select max(exam_id) from schedule)") or die(mysqli_error($con));
+      //$eid = mysqli_fetch($result1);
+      while($row = mysqli_fetch_array($result1))
+                          {
+                          $eid= $row['exam_id'];
+                          }
+   
+    mysqli_commit($con);
+    foreach ($_POST['station_list'] as $selected) {
+      $result2=mysqli_query($con,"SELECT station.station_id FROM station WHERE station.station_id='$selected'") or die(mysqli_error($con));
+      while($row = mysqli_fetch_array($result2))
+                          {
+                          $sid= $row['station_id'];
+                          }   
+      $qry=mysqli_query($con,"INSERT INTO `exam_station` (`exam_id`, `station_id`) VALUES ('$eid','$sid')")or die(mysqli_error($con));   
+    }
+  }
+  else
+  {
+    mysqli_rollback($con);
+  ?>
+  <script>
+alert('Schedule was not added');
+window.location = "schedule.php";
+</script>
+<?php
+  }
+              mysqli_commit($con);
 ?>
 <script>
 alert('Schedule has been added');
@@ -37,7 +67,7 @@ window.location = "schedule.php";
 		else { mysqli_rollback($con);
 		?>
 <script>
-alert('Schedule was not added');
+alert('Schedule was not added. Please, select atleast one station');
 window.location = "schedule.php";
 </script>
 		}
@@ -94,18 +124,18 @@ window.location = "schedule.php";
 <div class="form-group">
 							<label class="col-md-5 control-label" for="room">Station:</label>  
 							  <div class="col-md-3">
-								<select id="dept_id" name="station" class="form-control" required/>  
-									<option></option>
+      
 								<?php 
-						$query=mysqli_query($con,"SELECT * FROM station ORDER by station_name");
+                
+			$query=mysqli_query($con,"SELECT * FROM station where isexam_allowed=1 ORDER by station_name");
 						while($row=mysqli_fetch_array($query))
 						 { 
-						 $sel= "selected";
+						  $sel= "selected";
 						 	?>
-							<option value="<?php echo $row['station_id'];?>" <?=$sel?> > <?php echo $row['station_name'];?> </option>
-							<?php 
+							<input type="checkbox" name="station_list[]" style="margin: 3px; padding: 10px; display:inline-block" value="<?php echo $row['station_id'];?>" <?=$sel?> > <?php echo $row['station_name']; ?> 
+              <?php 
 						} ?>
-								</select>
+
                                 </div></div>      
       <div class="control-group">
         <div class="controls" align="center">
