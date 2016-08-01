@@ -20,20 +20,45 @@ $_POST['contact']=NULL; $_POST['image']=NULL; $_POST['nicimage']=NULL; $_POST['n
 	$caddress=mysql_real_escape_string($_POST['caddress']);
 	$contact=mysql_real_escape_string($_POST['contact']);
 	$password = md5(mysql_real_escape_string($_POST['password']));
-    $img = mysql_real_escape_string($_POST['image']);
-	$nicimg = mysql_real_escape_string($_POST['nicimage']);
+
+  $target_dir = "uploads/";
+    $target_file = $target_dir . basename($_FILES["imageUpload"]["name"]);
+    $uploadOk = 1;
+    $imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
+
+    if (move_uploaded_file($_FILES["imageUpload"]["tmp_name"], $target_file)) {
+        echo "The file ". basename( $_FILES["imageUpload"]["name"]). " has been uploaded.";
+    } else {
+        echo "Sorry, there was an error uploading your file.";
+    }
+
+    $image=basename( $_FILES["imageUpload"]["name"],".jpg");
+    $image=addslashes(file_get_contents($target_file));
+
+    $target_dir = "uploads/";
+    $target_file = $target_dir . basename($_FILES["nicimage"]["name"]);
+    $uploadOk = 1;
+    $imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);  
+
+    if (move_uploaded_file($_FILES["nicimage"]["tmp_name"], $target_file)) {
+        echo "The file ". basename( $_FILES["nicimage"]["name"]). " has been uploaded.";
+    } else {
+        echo "Sorry, there was an error uploading your file.";
+    }
+
+    $nicimg=basename( $_FILES["nicimage"]["name"],".jpg");
 	
 	$f = mysqli_query($con,"SELECT cand_id from candidate where cand_email='$email' or cand_nic='$NIC' or cand_contactno='$contact' or Ref_id='$refid' ")or die(mysqli_error($con));
 													$count = mysqli_num_rows($f);
 													if($count <= 0)
 													{
-													if($firstname=="" || $fathername=="" || $email=="" || $nicimg=="" || $img=="" || $password=="" || $contact == "" || $caddress == "" || $paddress=="" || $organization == "" || $pob == "" || $bdate== "" || $gender == "" || $NIC=="") 
+													if($firstname=="" || $fathername=="" || $email=="" || $nicimg=="" || $image=="" || $password=="" || $contact == "" || $caddress == "" || $paddress=="" || $organization == "" || $pob == "" || $bdate== "" || $gender == "" || $NIC=="") 
 													{?><script>
 alert('Some Error Occured While Signing UP!');
 window.location = "signup.php";
 </script> <?php exit(); }
 													else {
-	$checking=mysqli_query($con,"INSERT INTO `candidate` (`Ref_id`, `cand_id`, `cand_password`, `cand_full_name`, `cand_father_name`, `cand_nic`, `cand_dob`, `cand_gender`, `cand_contactno`, `cand_email`, `cand_permenant_address`, `cand_current_address`, `cand_nic_attachment`, `cand_profile_pic`,`cand_pob`,`cand_organization`,`isactive`) VALUES ('0', '', '$password', '$firstname', '$fathername', '$NIC', '$bdate', '$gender', '$contact', '$email', '$paddress', '$caddress','$nicimg','$img','$pob','$organization','0')")or die(mysqli_error($con));
+	$checking=mysqli_query($con,"INSERT INTO `candidate` (`Ref_id`, `cand_id`, `cand_password`, `cand_full_name`, `cand_father_name`, `cand_nic`, `cand_dob`, `cand_gender`, `cand_contactno`, `cand_email`, `cand_permenant_address`, `cand_current_address`, `cand_nic_attachment`, `cand_profile_pic`,`cand_pob`,`cand_organization`,`isactive`) VALUES ('0', '', '$password', '$firstname', '$fathername', '$NIC', '$bdate', '$gender', '$contact', '$email', '$paddress', '$caddress','$nicimg','$image','$pob','$organization','0')")or die(mysqli_error($con));
 	if($checking)
 	{
  if($organization=="Pakistan International Airlines") {$org="PIA"; } else {$org="PVT"; }
@@ -221,7 +246,7 @@ echo '<div class="errormsgbox">Refrence id already exist!</div>';
   <div id="page-inner">
     <div class="row">
       <div class="col-md-12">
-        <form class="form-horizontal" role="form" method="post">
+        <form action='signup.php' class="form-horizontal" role="form" method="post" enctype='multipart/form-data'>
           <h3>
             <center>
               Sign Up
@@ -237,7 +262,7 @@ if ( $_POST['fname'] ) {
 print ' value="' . $_POST['fname'] . '"';
 } ?> required/>
               </div>
-            </div>
+            </div>   
             <div class="form-group">
               <label class="col-md-5 control-label">Father Name:</label>
               <div class="col-md-3">
@@ -359,9 +384,7 @@ print ' value="' . $_POST['contact'] . '"';
               <div class="col-md-3">
                 <li class="two">
                   <div class="left_nor">
-                    <input type="file" id="logo1" onChange="Checkfiles()" multiple accept='image/*' name="image" tabindex="20" 
-                    value="<?php // if($_POST["txtLogoFileName"]) echo $_POST["txtLogoFileName"]; else echo($LogofileName); ?>" 
-                    <?php // if ( $_POST['image'] ) { print ' value="' . $_POST['image'] . '"';} ?> required/>
+                    <input type="file" id="logo1"  name="imageUpload" required/>
                   </div>
                 </li>
               </div>
@@ -371,8 +394,7 @@ print ' value="' . $_POST['contact'] . '"';
               <div class="col-md-3">
                 <li class="two">
                   <div class="left_nor">
-                    <input type="file" id="logo1" onChange="Checkfiles()" multiple accept='image/*' name="nicimage" tabindex="20" 
-                    value="<?php // if($_POST["txtLogoFileName"]) echo $_POST["txtLogoFileName"]; else echo($LogofileName); ?>" required/>
+                    <input type="file" id="logo1" name="nicimage" required/>
                   </div>
                 </li>
               </div>
