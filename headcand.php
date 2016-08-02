@@ -121,7 +121,7 @@
                 <ul class="nav navbar-nav side-nav">
                 <li>
                         <div class="user-img-div">
-                       <img src="data:image/jpeg;base64,<?php echo base64_encode($image); ?>" width ="200px" height="100px" class="img-circle"/>
+                       <img src="data:image/jpeg;base64,<?php echo base64_encode($image); ?>" width ="15px" height="15px" class="img-circle"/>
                         </div>
                     </li>
                     <li class="active">

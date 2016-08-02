@@ -37,7 +37,11 @@ $cand_id=$_SESSION['cand_id'];
             	<table>
 	<tr>
 		<td width="40%" height="100%">
+<<<<<<< HEAD
 			<?php echo '<img width="250px" height="350px" src="data:image/jpeg;base64,'.base64_encode( $image ).'"/>'; ?>
+=======
+ <img src="data:image/jpeg;base64,<?php echo base64_encode($image); ?>" width="300px" height="500px"class="img-rounded" align="top"/>
+>>>>>>> 7f717e1a1b8c54543a72e54768365d3aca9b93f5
 		</td>
         <td width="10%">
         </td>

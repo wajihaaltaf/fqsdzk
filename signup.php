@@ -26,12 +26,12 @@ $_POST['contact']=NULL; $_POST['image']=NULL; $_POST['nicimage']=NULL; $_POST['n
     $uploadOk = 1;
     $imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
 
-    if (move_uploaded_file($_FILES["imageUpload"]["tmp_name"], $target_file)) {
+    /*if (move_uploaded_file($_FILES["imageUpload"]["tmp_name"], $target_file)) {
         echo "The file ". basename( $_FILES["imageUpload"]["name"]). " has been uploaded.";
     } else {
         echo "Sorry, there was an error uploading your file.";
     }
-
+*/
     $image=basename( $_FILES["imageUpload"]["name"],".jpg");
     $image=addslashes(file_get_contents($target_file));
 
@@ -40,11 +40,11 @@ $_POST['contact']=NULL; $_POST['image']=NULL; $_POST['nicimage']=NULL; $_POST['n
     $uploadOk = 1;
     $imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);  
 
-    if (move_uploaded_file($_FILES["nicimage"]["tmp_name"], $target_file)) {
+   /* if (move_uploaded_file($_FILES["nicimage"]["tmp_name"], $target_file)) {
         echo "The file ". basename( $_FILES["nicimage"]["name"]). " has been uploaded.";
     } else {
         echo "Sorry, there was an error uploading your file.";
-    }
+    }*/
 
     $nicimg=basename( $_FILES["nicimage"]["name"],".jpg");
 	
@@ -384,7 +384,7 @@ print ' value="' . $_POST['contact'] . '"';
               <div class="col-md-3">
                 <li class="two">
                   <div class="left_nor">
-                    <input type="file" id="logo1"  name="imageUpload" required/>
+                    <input type="file" onChange="Checkfiles()" id="logo1"  name="imageUpload" required/>
                   </div>
                 </li>
               </div>
@@ -394,7 +394,7 @@ print ' value="' . $_POST['contact'] . '"';
               <div class="col-md-3">
                 <li class="two">
                   <div class="left_nor">
-                    <input type="file" id="logo1" name="nicimage" required/>
+                    <input type="file" onChange="Checkfiles()" id="logo1" name="nicimage" required/>
                   </div>
                 </li>
               </div>
