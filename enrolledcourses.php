@@ -6,7 +6,22 @@ require_once('config.php');
 require_once('session1.php');
 include('headcand.php');
 ?>
-  <nav>
+<head>
+<script>
+						function withdrawn(){
+						var a=confirm("Are you sure you want to withdraw?");
+                         if(a==true){
+						 alert("You have successfully withdrawn");
+                         myfunction();		
+						 window.location.reload();
+						 }
+						}
+						
+			   </script>
+
+</head>
+<body>
+	<nav>
    <div id="page-wrapper" class="page-wrapper-cls">
             <div id="page-inner">
                 <div class="row">
@@ -18,7 +33,7 @@ include('headcand.php');
                 </div></div>
   </div>
           <link href="css/table1.css" rel="stylesheet" type="text/css" />
-			<form method="post">
+			<form method="post" >
 			<div class="control-label" align="right">
 <table class="table" cellspacing="0" border="0" class="table" id="example">
 				<thead>
@@ -26,22 +41,19 @@ include('headcand.php');
 				<th>Module</th>
                 <th>Category</th>
                 <th>Detail</th>
+				<th>Status</th>
 				</tr>
-				 <script>
-				$(function() {
-							
-				 });
-				 </script>
 				</thead>
 
 
 <!-------------------------------- select table inventory ---------------------------------->
 						<?php $cand_id= $_SESSION['cand_id'];
 						
-						$query=mysqli_query($con,"SELECT enrollment.module_id,enrollment.category_id FROM enrollment WHERE enrollment.cand_id='$cand_id' ")or die(mysqli_error($con));
+						$query=mysqli_query($con,"SELECT enrollment.withdrawn,enrollment.module_id,enrollment.category_id FROM enrollment WHERE enrollment.cand_id='$cand_id' ")or die(mysqli_error($con));
 						while($rec=mysqli_fetch_array($query)){
 						$mid = $rec['module_id'];
 						$cid = $rec['category_id'];
+						$iswithdrawn = $rec['withdrawn'];
 						
 						$quer=mysqli_query($con,"SELECT module.module_name,category.category_name,module.module_id FROM category,module WHERE module.module_id='$mid' and category.category_id='$cid' ")or die(mysqli_error($con));
 						$rc=mysqli_fetch_array($quer);
@@ -51,9 +63,20 @@ include('headcand.php');
 						<td><center><?php echo $rc['module_name']; ?></center></td>
 						<td><center><?php echo $rc['category_name'] ?></center></td>
                         <td><a href="coursedetail.php<?php echo '?id='.$id; ?> ">Course Detail</a></td>
+						<td><center><?php if($iswithdrawn==0){?><input type="button" id="withdraw" value="Withdraw" style="background:green" onclick="withdrawn();" ><?php }?>
+						<?php if($iswithdrawn==1){?><input type="button" id="withdraw" value="Withdrawn" style="background:red" disabled><?php }?></center>
+						</td>
 						</tr><?php }?>
 							</table>
 							</div>
+						<script>
+						function myfunction(){
+							<?php
+						mysqli_query($con,"UPDATE enrollment SET withdrawn = 1 WHERE enrollment.cand_id = '$cand_id' AND enrollment.category_id='$cid' AND enrollment.module_id='$mid' ")or die(mysqli_error($con));
+                        mysqli_commit($con);
+						?>
+						}
+						</script>
 							</form>
                              
   </nav>
@@ -71,5 +94,6 @@ include('headcand.php');
     <script src="js/plugins/morris/morris.min.js"></script>
     <script src="js/plugins/morris/morris-data.js"></script>
 	<?php include('script.php'); ?>
+	
 </body>
 </html>
